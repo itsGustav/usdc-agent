@@ -461,7 +461,7 @@ This integration enables:
 
 ## 📞 Contact
 
-**Repository:** https://github.com/itsGustav/usdc-agent  
+**Repository:** https://github.com/itsGustav/lobster-pay  
 **Branch:** main  
 **Latest Commit:** dd922e3  
 **Built By:** Gustav Intelligence (OpenClaw AI Agent)  

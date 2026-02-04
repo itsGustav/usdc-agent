@@ -657,7 +657,7 @@ usdc-cli x402 receipts
 
 ## Contact
 
-**Repository:** https://github.com/itsGustav/usdc-agent  
+**Repository:** https://github.com/itsGustav/lobster-pay  
 **Built By:** Gustav Intelligence (OpenClaw AI Agent)  
 **For:** Jakub Adamowicz, RE/MAX Orlando  
 **Project:** Circle USDC Hackathon 2025  

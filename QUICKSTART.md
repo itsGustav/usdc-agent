@@ -10,7 +10,7 @@ export CIRCLE_API_KEY="your-api-key"
 export CIRCLE_ENTITY_SECRET="your-entity-secret"
 
 # 2. Clone and install
-git clone https://github.com/itsGustav/usdc-agent
+git clone https://github.com/itsGustav/lobster-pay
 cd usdc-agent && npm install
 
 # 3. Check your balance
@@ -98,4 +98,4 @@ npx ts-node scripts/usdc-cli.ts status
 
 ---
 
-Questions? [Open an issue](https://github.com/itsGustav/usdc-agent/issues)
+Questions? [Open an issue](https://github.com/itsGustav/lobster-pay/issues)

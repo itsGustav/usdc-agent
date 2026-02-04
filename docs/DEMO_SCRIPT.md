@@ -224,7 +224,7 @@ Bot: "📊 USDC Activity Report - January 2026
 > 
 > Built with Circle Programmable Wallets, CCTP, and ❤️.
 > 
-> GitHub: github.com/itsGustav/usdc-agent
+> GitHub: github.com/itsGustav/lobster-pay
 > Built for Circle Hackathon 2026"
 
 ---

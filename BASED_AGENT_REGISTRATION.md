@@ -39,9 +39,9 @@ Perfect for freelance payments, agent-to-agent commerce, marketplace escrow, and
 
 ## Links
 
-- **Website:** https://itsgustav.github.io/usdc-agent/
-- **Documentation:** https://itsgustav.github.io/usdc-agent/documentation.html
-- **GitHub:** https://github.com/itsGustav/usdc-agent
+- **Website:** https://itsgustav.github.io/lobster-pay/
+- **Documentation:** https://itsgustav.github.io/lobster-pay/documentation.html
+- **GitHub:** https://github.com/itsGustav/lobster-pay
 - **NPM:** `npm install lobster-pay`
 
 ## Capabilities
