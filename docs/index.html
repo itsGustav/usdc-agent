@@ -3,20 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>USDC Agent - Payment Infrastructure for AI Agents</title>
-  <meta name="description" content="Complete USDC payment infrastructure for AI agents. Circle integration, x402 protocol, ERC-8004 trust layer.">
+  <title>USDC Agent – Payment Infrastructure for AI Agents</title>
+  <meta name="description" content="The complete payment stack for AI agents. Send, receive, and escrow USDC with built-in trust verification.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   
   <style>
     :root {
-      --primary: #2775CA;
-      --primary-dark: #1a5a9e;
-      --secondary: #00D395;
-      --dark: #0a0a0a;
-      --darker: #050505;
-      --gray: #888;
-      --light: #f5f5f5;
-      --card: #111;
-      --border: #222;
+      --primary: #635BFF;
+      --primary-light: #7A73FF;
+      --primary-dark: #4B45C6;
+      --secondary: #00D4AA;
+      --accent: #FF6B6B;
+      --dark: #0A2540;
+      --darker: #030712;
+      --gray-900: #111827;
+      --gray-800: #1F2937;
+      --gray-700: #374151;
+      --gray-600: #4B5563;
+      --gray-500: #6B7280;
+      --gray-400: #9CA3AF;
+      --gray-300: #D1D5DB;
+      --gray-200: #E5E7EB;
+      --gray-100: #F3F4F6;
+      --white: #FFFFFF;
+      --gradient-1: linear-gradient(135deg, #635BFF 0%, #00D4AA 100%);
+      --gradient-2: linear-gradient(135deg, #0A2540 0%, #1a1a2e 50%, #0A2540 100%);
+      --gradient-3: linear-gradient(180deg, rgba(99, 91, 255, 0.15) 0%, transparent 100%);
     }
     
     * {
@@ -25,23 +41,35 @@
       box-sizing: border-box;
     }
     
+    html {
+      scroll-behavior: smooth;
+    }
+    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--darker);
-      color: var(--light);
+      color: var(--gray-300);
       line-height: 1.6;
+      overflow-x: hidden;
     }
     
     .container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 0 20px;
+      padding: 0 24px;
     }
     
-    /* Header */
+    /* ===== HEADER ===== */
     header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
       padding: 20px 0;
-      border-bottom: 1px solid var(--border);
+      background: rgba(3, 7, 18, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     
     nav {
@@ -51,62 +79,56 @@
     }
     
     .logo {
-      font-size: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
       font-weight: 700;
-      color: var(--primary);
-    }
-    
-    .logo span {
-      color: var(--secondary);
-    }
-    
-    nav a {
-      color: var(--gray);
+      color: var(--white);
       text-decoration: none;
-      margin-left: 30px;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--gradient-1);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+    
+    .nav-links a {
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
       transition: color 0.2s;
     }
     
-    nav a:hover {
-      color: var(--light);
+    .nav-links a:hover {
+      color: var(--white);
     }
     
-    /* Hero */
-    .hero {
-      padding: 100px 0;
-      text-align: center;
-      background: linear-gradient(180deg, var(--darker) 0%, var(--dark) 100%);
-    }
-    
-    .hero h1 {
-      font-size: 56px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .hero p {
-      font-size: 22px;
-      color: var(--gray);
-      max-width: 600px;
-      margin: 0 auto 40px;
-    }
-    
-    .hero-buttons {
+    .nav-cta {
       display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
+      gap: 12px;
     }
     
     .btn {
-      display: inline-block;
-      padding: 16px 32px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       text-decoration: none;
       transition: all 0.2s;
@@ -114,575 +136,1321 @@
       border: none;
     }
     
+    .btn-ghost {
+      background: transparent;
+      color: var(--gray-300);
+    }
+    
+    .btn-ghost:hover {
+      color: var(--white);
+      background: rgba(255,255,255,0.05);
+    }
+    
     .btn-primary {
       background: var(--primary);
-      color: white;
+      color: var(--white);
     }
     
     .btn-primary:hover {
-      background: var(--primary-dark);
-      transform: translateY(-2px);
+      background: var(--primary-light);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(99, 91, 255, 0.4);
     }
     
     .btn-secondary {
-      background: transparent;
-      color: var(--light);
-      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.1);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,0.1);
     }
     
     .btn-secondary:hover {
-      border-color: var(--gray);
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.2);
     }
     
-    /* Features */
-    .features {
-      padding: 100px 0;
+    .btn-large {
+      padding: 16px 32px;
+      font-size: 16px;
+      border-radius: 10px;
     }
     
-    .features h2 {
+    /* ===== HERO ===== */
+    .hero {
+      padding: 180px 0 120px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150%;
+      height: 100%;
+      background: radial-gradient(ellipse at center top, rgba(99, 91, 255, 0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .hero-content {
+      position: relative;
       text-align: center;
-      font-size: 36px;
-      margin-bottom: 60px;
+      max-width: 900px;
+      margin: 0 auto;
     }
     
-    .feature-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(99, 91, 255, 0.1);
+      border: 1px solid rgba(99, 91, 255, 0.2);
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--primary-light);
+      margin-bottom: 32px;
     }
     
-    .feature-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 30px;
-      transition: transform 0.2s, border-color 0.2s;
+    .hero-badge::before {
+      content: '🏆';
     }
     
-    .feature-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--primary);
+    .hero h1 {
+      font-size: clamp(48px, 8vw, 72px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
     }
     
-    .feature-card h3 {
+    .hero h1 .gradient-text {
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero-subtitle {
       font-size: 20px;
-      margin-bottom: 15px;
+      color: var(--gray-400);
+      max-width: 600px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+    
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 64px;
+    }
+    
+    .hero-code {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: left;
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-code::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gradient-1);
+    }
+    
+    .code-header {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      margin-bottom: 20px;
     }
     
-    .feature-card p {
-      color: var(--gray);
+    .code-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
     }
     
-    .feature-icon {
-      font-size: 24px;
+    .code-dot.red { background: #FF5F57; }
+    .code-dot.yellow { background: #FFBD2E; }
+    .code-dot.green { background: #28CA42; }
+    
+    .code-content {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      line-height: 1.8;
     }
     
-    /* How it Works */
-    .how-it-works {
-      padding: 100px 0;
-      background: var(--dark);
+    .code-comment { color: var(--gray-500); }
+    .code-keyword { color: #FF79C6; }
+    .code-function { color: #50FA7B; }
+    .code-string { color: #F1FA8C; }
+    .code-variable { color: #8BE9FD; }
+    .code-number { color: #BD93F9; }
+    
+    /* ===== LOGOS ===== */
+    .logos {
+      padding: 80px 0;
+      border-top: 1px solid var(--gray-800);
+      border-bottom: 1px solid var(--gray-800);
     }
     
-    .how-it-works h2 {
+    .logos-title {
       text-align: center;
-      font-size: 36px;
-      margin-bottom: 60px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 40px;
     }
     
-    .flow {
+    .logos-grid {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 20px;
+      gap: 60px;
       flex-wrap: wrap;
-      margin-bottom: 60px;
+      opacity: 0.6;
+    }
+    
+    .logo-item {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gray-400);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    /* ===== VALUE PROPS ===== */
+    .value-props {
+      padding: 120px 0;
+    }
+    
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 80px;
+    }
+    
+    .section-label {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    
+    .section-title {
+      font-size: 44px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    
+    .section-subtitle {
+      font-size: 18px;
+      color: var(--gray-400);
+      line-height: 1.7;
+    }
+    
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    
+    .value-card {
+      background: linear-gradient(180deg, var(--gray-900) 0%, var(--gray-900) 100%);
+      border: 1px solid var(--gray-800);
+      border-radius: 16px;
+      padding: 40px 32px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .value-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gradient-1);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .value-card:hover {
+      border-color: var(--gray-700);
+      transform: translateY(-4px);
+    }
+    
+    .value-card:hover::before {
+      opacity: 1;
+    }
+    
+    .value-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(99, 91, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 24px;
+    }
+    
+    .value-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    
+    .value-card p {
+      color: var(--gray-400);
+      line-height: 1.7;
+    }
+    
+    /* ===== HOW IT WORKS ===== */
+    .how-it-works {
+      padding: 120px 0;
+      background: var(--gray-900);
+      position: relative;
+    }
+    
+    .how-it-works::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gray-700), transparent);
+    }
+    
+    .flow-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      position: relative;
+      padding: 0 40px;
+    }
+    
+    .flow-line {
+      position: absolute;
+      top: 44px;
+      left: 120px;
+      right: 120px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      z-index: 0;
     }
     
     .flow-step {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 30px;
+      flex: 1;
       text-align: center;
-      width: 200px;
+      position: relative;
+      z-index: 1;
     }
     
-    .flow-step .number {
-      background: var(--primary);
-      color: white;
-      width: 40px;
-      height: 40px;
+    .flow-number {
+      width: 88px;
+      height: 88px;
+      background: var(--darker);
+      border: 2px solid var(--gray-700);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 15px;
-      font-weight: 700;
+      margin: 0 auto 24px;
+      font-size: 32px;
+      transition: all 0.3s;
     }
     
-    .flow-arrow {
-      color: var(--gray);
-      font-size: 24px;
-    }
-    
-    /* Get Started Tabs */
-    .get-started {
-      padding: 100px 0;
-    }
-    
-    .get-started h2 {
-      text-align: center;
-      font-size: 36px;
-      margin-bottom: 20px;
-    }
-    
-    .get-started .subtitle {
-      text-align: center;
-      color: var(--gray);
-      margin-bottom: 40px;
-    }
-    
-    .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 30px;
-    }
-    
-    .tab {
-      padding: 12px 24px;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--gray);
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .tab:hover, .tab.active {
-      background: var(--primary);
+    .flow-step:hover .flow-number {
       border-color: var(--primary);
-      color: white;
+      transform: scale(1.05);
     }
     
-    .tab-content {
-      display: none;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 40px;
-      max-width: 800px;
+    .flow-step h4 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    
+    .flow-step p {
+      font-size: 15px;
+      color: var(--gray-400);
+      max-width: 180px;
       margin: 0 auto;
     }
     
-    .tab-content.active {
+    /* ===== GET STARTED ===== */
+    .get-started {
+      padding: 120px 0;
+    }
+    
+    .tabs-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .tabs-header {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 40px;
+      background: var(--gray-900);
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--gray-800);
+    }
+    
+    .tab-btn {
+      flex: 1;
+      max-width: 200px;
+      padding: 16px 24px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gray-400);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .tab-btn:hover {
+      color: var(--gray-200);
+    }
+    
+    .tab-btn.active {
+      background: var(--primary);
+      color: var(--white);
+    }
+    
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .tab-panel.active {
       display: block;
     }
     
-    .tab-content h3 {
-      margin-bottom: 20px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .setup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    
+    .setup-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    
+    .setup-step {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+    
+    .step-content h4 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    
+    .step-content p {
+      color: var(--gray-400);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    
+    .step-content a {
+      color: var(--primary-light);
+      text-decoration: none;
+    }
+    
+    .step-content a:hover {
+      text-decoration: underline;
     }
     
     .code-block {
       background: var(--darker);
-      border-radius: 8px;
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--gray-900);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    
+    .code-block-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--gray-400);
+    }
+    
+    .code-block-copy {
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid var(--gray-700);
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--gray-400);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .code-block-copy:hover {
+      background: var(--gray-800);
+      color: var(--white);
+    }
+    
+    .code-block pre {
       padding: 20px;
       overflow-x: auto;
-      margin: 20px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.7;
     }
     
-    .code-block code {
-      font-family: 'Monaco', 'Menlo', monospace;
-      font-size: 14px;
-      color: var(--secondary);
+    /* ===== TRUST ===== */
+    .trust {
+      padding: 120px 0;
+      background: var(--gray-900);
     }
     
-    .step {
+    .trust-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    
+    .trust-text h2 {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+    
+    .trust-text p {
+      font-size: 18px;
+      color: var(--gray-400);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    
+    .trust-features {
       display: flex;
-      gap: 20px;
-      margin-bottom: 30px;
+      flex-direction: column;
+      gap: 16px;
     }
     
-    .step-number {
-      background: var(--primary);
-      color: white;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+    .trust-feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+      color: var(--gray-300);
+    }
+    
+    .trust-feature-icon {
+      width: 24px;
+      height: 24px;
+      background: rgba(0, 212, 170, 0.1);
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
-      font-weight: 600;
+      color: var(--secondary);
+      font-size: 14px;
     }
     
-    /* Trust Section */
-    .trust {
-      padding: 100px 0;
-      background: var(--dark);
-    }
-    
-    .trust h2 {
-      text-align: center;
-      font-size: 36px;
-      margin-bottom: 20px;
-    }
-    
-    .trust .subtitle {
-      text-align: center;
-      color: var(--gray);
-      margin-bottom: 60px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .trust-grid {
+    .trust-visual {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
     }
     
     .trust-card {
+      background: var(--darker);
+      border: 1px solid var(--gray-800);
+      border-radius: 16px;
+      padding: 28px;
       text-align: center;
-      padding: 30px;
+      transition: all 0.3s;
     }
     
-    .trust-card .score {
+    .trust-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+    
+    .trust-score {
       font-size: 48px;
       font-weight: 700;
-      color: var(--secondary);
-      margin-bottom: 10px;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
     }
     
-    .trust-card .level {
-      font-size: 18px;
-      margin-bottom: 5px;
+    .trust-level {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
     }
     
-    .trust-card .limit {
-      color: var(--gray);
+    .trust-limit {
+      font-size: 14px;
+      color: var(--gray-500);
     }
     
-    /* CTA */
+    /* ===== FEATURES ===== */
+    .features {
+      padding: 120px 0;
+    }
+    
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    
+    .feature-card {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 16px;
+      padding: 40px;
+      display: flex;
+      gap: 24px;
+      transition: all 0.3s;
+    }
+    
+    .feature-card:hover {
+      border-color: var(--gray-700);
+    }
+    
+    .feature-card.large {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(99, 91, 255, 0.1) 0%, rgba(0, 212, 170, 0.05) 100%);
+    }
+    
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(99, 91, 255, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+    
+    .feature-content h3 {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+    
+    .feature-content p {
+      color: var(--gray-400);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+    
+    .feature-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary-light);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+    }
+    
+    .feature-link:hover {
+      text-decoration: underline;
+    }
+    
+    /* ===== CTA ===== */
     .cta {
-      padding: 100px 0;
+      padding: 120px 0;
       text-align: center;
-      background: linear-gradient(135deg, var(--primary) 0%, #1a3a5c 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(99, 91, 255, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .cta-content {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
     }
     
     .cta h2 {
-      font-size: 36px;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--white);
       margin-bottom: 20px;
+      letter-spacing: -0.02em;
     }
     
     .cta p {
-      color: rgba(255,255,255,0.8);
-      margin-bottom: 30px;
+      font-size: 20px;
+      color: var(--gray-400);
+      margin-bottom: 40px;
     }
     
-    /* Footer */
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+    
+    /* ===== FOOTER ===== */
     footer {
-      padding: 40px 0;
-      border-top: 1px solid var(--border);
-      text-align: center;
-      color: var(--gray);
+      padding: 60px 0;
+      border-top: 1px solid var(--gray-800);
     }
     
-    footer a {
-      color: var(--primary);
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 32px;
+    }
+    
+    .footer-links a {
+      color: var(--gray-500);
       text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
     }
     
-    /* Responsive */
+    .footer-links a:hover {
+      color: var(--white);
+    }
+    
+    .footer-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--gray-500);
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .value-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .feature-card.large {
+        grid-column: span 1;
+      }
+      
+      .trust-content {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+      
+      .setup-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
     @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
       .hero h1 {
         font-size: 36px;
       }
       
-      .hero p {
+      .hero-subtitle {
         font-size: 18px;
       }
       
-      .flow {
+      .value-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .flow-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 40px;
+        padding: 0;
+      }
+      
+      .flow-line {
+        display: none;
+      }
+      
+      .tabs-header {
         flex-direction: column;
       }
       
-      .flow-arrow {
-        transform: rotate(90deg);
+      .tab-btn {
+        max-width: none;
+      }
+      
+      .trust-visual {
+        grid-template-columns: 1fr;
+      }
+      
+      .cta h2 {
+        font-size: 32px;
+      }
+      
+      .footer-content {
+        flex-direction: column;
+        gap: 24px;
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
     <div class="container">
       <nav>
-        <div class="logo">USDC<span>Agent</span></div>
-        <div>
+        <a href="#" class="logo">
+          <div class="logo-icon">💰</div>
+          USDC Agent
+        </a>
+        <div class="nav-links">
           <a href="#features">Features</a>
           <a href="#how-it-works">How it Works</a>
           <a href="#get-started">Get Started</a>
-          <a href="https://github.com/itsGustav/usdc-agent">GitHub</a>
+          <a href="https://github.com/itsGustav/usdc-agent/tree/main/docs">Docs</a>
+        </div>
+        <div class="nav-cta">
+          <a href="https://github.com/itsGustav/usdc-agent" class="btn btn-ghost">GitHub</a>
+          <a href="#get-started" class="btn btn-primary">Get Started</a>
         </div>
       </nav>
     </div>
   </header>
   
+  <!-- Hero -->
   <section class="hero">
     <div class="container">
-      <h1>Payment Infrastructure<br>for AI Agents</h1>
-      <p>Send, receive, and escrow USDC with built-in trust verification. Built on Circle + ERC-8004.</p>
-      <div class="hero-buttons">
-        <a href="#get-started" class="btn btn-primary">Get Started</a>
-        <a href="https://github.com/itsGustav/usdc-agent" class="btn btn-secondary">View on GitHub</a>
+      <div class="hero-content">
+        <div class="hero-badge">Built for Circle USDC Hackathon 2026</div>
+        <h1>Payment infrastructure<br>for <span class="gradient-text">AI agents</span></h1>
+        <p class="hero-subtitle">
+          The complete payment stack for the agentic economy. Send, receive, and escrow USDC with built-in trust verification.
+        </p>
+        <div class="hero-buttons">
+          <a href="#get-started" class="btn btn-primary btn-large">Get Started Free →</a>
+          <a href="https://github.com/itsGustav/usdc-agent" class="btn btn-secondary btn-large">View on GitHub</a>
+        </div>
+        
+        <div class="hero-code">
+          <div class="code-header">
+            <span class="code-dot red"></span>
+            <span class="code-dot yellow"></span>
+            <span class="code-dot green"></span>
+          </div>
+          <div class="code-content">
+            <span class="code-comment">// Get started in 3 lines</span><br>
+            <span class="code-keyword">const</span> <span class="code-variable">agent</span> = <span class="code-keyword">await</span> <span class="code-function">createUSDCAgent</span>(config);<br><br>
+            <span class="code-keyword">await</span> agent.<span class="code-function">send</span>(<span class="code-string">'0x...'</span>, <span class="code-string">'100'</span>); <span class="code-comment">// Send USDC</span><br>
+            <span class="code-keyword">await</span> agent.<span class="code-function">pay</span>(<span class="code-string">'https://api.example.com'</span>); <span class="code-comment">// Pay for API</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
   
-  <section class="features" id="features">
+  <!-- Logos -->
+  <section class="logos">
     <div class="container">
-      <h2>Everything You Need</h2>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h3><span class="feature-icon">💰</span> Circle USDC</h3>
-          <p>Send, receive, and bridge USDC across Ethereum, Polygon, Avalanche, Arbitrum, and Base via Circle's Programmable Wallets.</p>
+      <p class="logos-title">Built on trusted infrastructure</p>
+      <div class="logos-grid">
+        <div class="logo-item">⭕ Circle</div>
+        <div class="logo-item">💎 Ethereum</div>
+        <div class="logo-item">🔷 Base</div>
+        <div class="logo-item">💜 Polygon</div>
+        <div class="logo-item">🔺 Arbitrum</div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Value Props -->
+  <section class="value-props" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">Why USDC Agent</span>
+        <h2 class="section-title">Everything agents need to transact</h2>
+        <p class="section-subtitle">Three powerful layers that work together to enable trustless agent-to-agent commerce.</p>
+      </div>
+      
+      <div class="value-grid">
+        <div class="value-card">
+          <div class="value-icon">💳</div>
+          <h3>Circle USDC</h3>
+          <p>Send, receive, and bridge USDC across 5+ chains via Circle's enterprise-grade Programmable Wallets API.</p>
         </div>
-        <div class="feature-card">
-          <h3><span class="feature-icon">🔐</span> x402 Protocol</h3>
-          <p>HTTP-native micropayments. When an API returns 402, your agent automatically pays and retries. No invoices needed.</p>
+        <div class="value-card">
+          <div class="value-icon">⚡</div>
+          <h3>x402 Protocol</h3>
+          <p>HTTP-native micropayments. When an API returns 402, your agent pays automatically and retries. Zero friction.</p>
         </div>
-        <div class="feature-card">
-          <h3><span class="feature-icon">🆔</span> ERC-8004 Trust</h3>
-          <p>On-chain identity and reputation. Verify agents before paying, post feedback after transactions. Trust scores unlock higher limits.</p>
+        <div class="value-card">
+          <div class="value-icon">🛡️</div>
+          <h3>ERC-8004 Trust</h3>
+          <p>On-chain identity and reputation. Verify agents before paying, post feedback after. Trust scores unlock higher limits.</p>
         </div>
-        <div class="feature-card">
-          <h3><span class="feature-icon">🏦</span> Escrow as a Service</h3>
+        <div class="value-card">
+          <div class="value-icon">🏦</div>
+          <h3>Escrow Service</h3>
           <p>Pre-built templates for freelance, real estate, commerce, and P2P. Condition-based release with multi-party approval.</p>
         </div>
-        <div class="feature-card">
-          <h3><span class="feature-icon">📄</span> Invoicing</h3>
-          <p>Create professional invoices, track payments, handle recurring billing. Full lifecycle management.</p>
+        <div class="value-card">
+          <div class="value-icon">📄</div>
+          <h3>Invoicing</h3>
+          <p>Generate professional invoices, track payment status, and handle recurring billing automatically.</p>
         </div>
-        <div class="feature-card">
-          <h3><span class="feature-icon">🤝</span> Agent-to-Agent</h3>
-          <p>AI agents can discover, verify, pay, and rate each other. Build autonomous economic networks.</p>
+        <div class="value-card">
+          <div class="value-icon">🤖</div>
+          <h3>Agent Discovery</h3>
+          <p>Find trusted agents by capability. Filter by trust score, services offered, and transaction history.</p>
         </div>
       </div>
     </div>
   </section>
   
+  <!-- How it Works -->
   <section class="how-it-works" id="how-it-works">
     <div class="container">
-      <h2>How It Works</h2>
-      <div class="flow">
+      <div class="section-header">
+        <span class="section-label">How it works</span>
+        <h2 class="section-title">Four steps to trustless payments</h2>
+        <p class="section-subtitle">From discovery to feedback, the complete payment lifecycle.</p>
+      </div>
+      
+      <div class="flow-container">
+        <div class="flow-line"></div>
         <div class="flow-step">
-          <div class="number">1</div>
+          <div class="flow-number">🔍</div>
           <h4>Discover</h4>
-          <p>Find agents by capability</p>
+          <p>Find agents by capability and trust level</p>
         </div>
-        <div class="flow-arrow">→</div>
         <div class="flow-step">
-          <div class="number">2</div>
+          <div class="flow-number">✅</div>
           <h4>Verify</h4>
-          <p>Check trust score</p>
+          <p>Check on-chain reputation before transacting</p>
         </div>
-        <div class="flow-arrow">→</div>
         <div class="flow-step">
-          <div class="number">3</div>
+          <div class="flow-number">💸</div>
           <h4>Pay</h4>
-          <p>Send USDC via Circle</p>
+          <p>Send USDC instantly via Circle's API</p>
         </div>
-        <div class="flow-arrow">→</div>
         <div class="flow-step">
-          <div class="number">4</div>
+          <div class="flow-number">⭐</div>
           <h4>Rate</h4>
-          <p>Post feedback on-chain</p>
+          <p>Post feedback to build the trust network</p>
         </div>
       </div>
     </div>
   </section>
   
+  <!-- Get Started -->
   <section class="get-started" id="get-started">
     <div class="container">
-      <h2>Get Started</h2>
-      <p class="subtitle">Choose your path based on how you'll use USDC Agent</p>
-      
-      <div class="tabs">
-        <button class="tab active" data-tab="humans">👤 For Humans</button>
-        <button class="tab" data-tab="agents">🤖 For AI Agents</button>
-        <button class="tab" data-tab="developers">💻 For Developers</button>
+      <div class="section-header">
+        <span class="section-label">Get Started</span>
+        <h2 class="section-title">Up and running in minutes</h2>
+        <p class="section-subtitle">Choose your path based on how you'll use USDC Agent.</p>
       </div>
       
-      <div class="tab-content active" id="humans">
-        <h3>Quick Start for Humans</h3>
-        
-        <div class="step">
-          <div class="step-number">1</div>
-          <div>
-            <h4>Get Circle Credentials</h4>
-            <p>Sign up at <a href="https://console.circle.com" target="_blank">console.circle.com</a> and create an API key.</p>
-          </div>
+      <div class="tabs-container">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="humans">👤 For Humans</button>
+          <button class="tab-btn" data-tab="agents">🤖 For AI Agents</button>
+          <button class="tab-btn" data-tab="devs">💻 For Developers</button>
         </div>
         
-        <div class="step">
-          <div class="step-number">2</div>
-          <div>
-            <h4>Set Environment Variables</h4>
+        <div class="tab-panel active" id="tab-humans">
+          <div class="setup-grid">
+            <div class="setup-steps">
+              <div class="setup-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Get Circle Credentials</h4>
+                  <p>Sign up at <a href="https://console.circle.com" target="_blank">console.circle.com</a> and create an API key and entity secret.</p>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Set Environment Variables</h4>
+                  <p>Configure your credentials as environment variables for secure access.</p>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                  <h4>Run Commands</h4>
+                  <p>Use the CLI to check balances, send USDC, and manage your wallet.</p>
+                </div>
+              </div>
+            </div>
             <div class="code-block">
-              <code>export CIRCLE_API_KEY="your-api-key"<br>export CIRCLE_ENTITY_SECRET="your-entity-secret"</code>
+              <div class="code-block-header">
+                <span class="code-block-title">Terminal</span>
+                <button class="code-block-copy">Copy</button>
+              </div>
+              <pre><code><span class="code-comment"># Set credentials</span>
+<span class="code-keyword">export</span> CIRCLE_API_KEY=<span class="code-string">"your-key"</span>
+<span class="code-keyword">export</span> CIRCLE_ENTITY_SECRET=<span class="code-string">"your-secret"</span>
+
+<span class="code-comment"># Check balance</span>
+npx usdc-agent balance
+
+<span class="code-comment"># Send USDC</span>
+npx usdc-agent send 0x... 100
+
+<span class="code-comment"># View status</span>
+npx usdc-agent status</code></pre>
             </div>
           </div>
         </div>
         
-        <div class="step">
-          <div class="step-number">3</div>
-          <div>
-            <h4>Run Commands</h4>
-            <div class="code-block">
-              <code># Check balance<br>npx usdc-agent balance<br><br># Send USDC<br>npx usdc-agent send 0x... 10<br><br># View status<br>npx usdc-agent status</code>
+        <div class="tab-panel" id="tab-agents">
+          <div class="setup-grid">
+            <div class="setup-steps">
+              <div class="setup-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Install the SDK</h4>
+                  <p>Clone the repo and install dependencies with npm.</p>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Initialize Your Agent</h4>
+                  <p>Create a USDC Agent with one function call. Optionally register for on-chain identity.</p>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                  <h4>Start Transacting</h4>
+                  <p>Send payments, pay for APIs, create escrows, and build trust.</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="tab-content" id="agents">
-        <h3>Integration for AI Agents</h3>
-        
-        <div class="step">
-          <div class="step-number">1</div>
-          <div>
-            <h4>Install the Skill</h4>
             <div class="code-block">
-              <code>git clone https://github.com/itsGustav/usdc-agent<br>cd usdc-agent && npm install</code>
-            </div>
-          </div>
-        </div>
-        
-        <div class="step">
-          <div class="step-number">2</div>
-          <div>
-            <h4>Initialize Your Agent</h4>
-            <div class="code-block">
-              <code>import { createUSDCAgent } from './lib/easy';<br><br>const agent = await createUSDCAgent({<br>  circleApiKey: process.env.CIRCLE_API_KEY,<br>  circleEntitySecret: process.env.CIRCLE_ENTITY_SECRET,<br>  privateKey: process.env.PRIVATE_KEY, // For ERC-8004<br>  agentName: 'My AI Agent',<br>});</code>
-            </div>
-          </div>
-        </div>
-        
-        <div class="step">
-          <div class="step-number">3</div>
-          <div>
-            <h4>Start Transacting</h4>
-            <div class="code-block">
-              <code>// Check balance<br>const balance = await agent.balance();<br><br>// Send payment<br>await agent.send('0x...', '10');<br><br>// Pay for API via x402<br>const data = await agent.pay('https://api.example.com/premium');<br><br>// Check your trust score<br>const status = await agent.status();</code>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="tab-content" id="developers">
-        <h3>Full API for Developers</h3>
-        
-        <div class="step">
-          <div class="step-number">1</div>
-          <div>
-            <h4>Clone & Install</h4>
-            <div class="code-block">
-              <code>git clone https://github.com/itsGustav/usdc-agent<br>cd usdc-agent<br>npm install</code>
+              <div class="code-block-header">
+                <span class="code-block-title">agent.ts</span>
+                <button class="code-block-copy">Copy</button>
+              </div>
+              <pre><code><span class="code-keyword">import</span> { createUSDCAgent } <span class="code-keyword">from</span> <span class="code-string">'./lib/easy'</span>;
+
+<span class="code-keyword">const</span> agent = <span class="code-keyword">await</span> <span class="code-function">createUSDCAgent</span>({
+  circleApiKey: process.env.CIRCLE_API_KEY,
+  circleEntitySecret: process.env.CIRCLE_ENTITY_SECRET,
+  privateKey: process.env.PRIVATE_KEY, <span class="code-comment">// Optional: ERC-8004</span>
+  agentName: <span class="code-string">'My AI Agent'</span>,
+});
+
+<span class="code-comment">// Check balance</span>
+<span class="code-keyword">await</span> agent.<span class="code-function">balance</span>(); <span class="code-comment">// "1000"</span>
+
+<span class="code-comment">// Send payment</span>
+<span class="code-keyword">await</span> agent.<span class="code-function">send</span>(<span class="code-string">'0x...'</span>, <span class="code-string">'100'</span>);
+
+<span class="code-comment">// Pay for API (x402)</span>
+<span class="code-keyword">await</span> agent.<span class="code-function">pay</span>(<span class="code-string">'https://api.example.com'</span>);</code></pre>
             </div>
           </div>
         </div>
         
-        <div class="step">
-          <div class="step-number">2</div>
-          <div>
-            <h4>Use Individual Modules</h4>
-            <div class="code-block">
-              <code>// Circle USDC<br>import { CircleClient } from './lib/circle-client';<br><br>// x402 Protocol<br>import { X402Client, X402Server } from './lib/x402-client';<br><br>// ERC-8004 Trust<br>import { ERC8004Client } from './lib/erc8004';<br><br>// Escrow<br>import { EscrowManager, EscrowTemplates } from './lib/escrow';</code>
+        <div class="tab-panel" id="tab-devs">
+          <div class="setup-grid">
+            <div class="setup-steps">
+              <div class="setup-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4>Clone & Install</h4>
+                  <p>Get the full source code and install all dependencies.</p>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4>Import Modules</h4>
+                  <p>Use individual modules for fine-grained control over each feature.</p>
+                </div>
+              </div>
+              <div class="setup-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                  <h4>Build & Extend</h4>
+                  <p>Full TypeScript support. MIT licensed. Extend as needed.</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        
-        <div class="step">
-          <div class="step-number">3</div>
-          <div>
-            <h4>Read the Docs</h4>
-            <p>Full documentation available:</p>
-            <ul>
-              <li><a href="./ARCHITECTURE.md">Architecture Guide</a></li>
-              <li><a href="./x402-integration.md">x402 Protocol</a></li>
-              <li><a href="./erc8004-integration.md">ERC-8004 Trust Layer</a></li>
-              <li><a href="./escrow-templates.md">Escrow Templates</a></li>
-            </ul>
+            <div class="code-block">
+              <div class="code-block-header">
+                <span class="code-block-title">advanced.ts</span>
+                <button class="code-block-copy">Copy</button>
+              </div>
+              <pre><code><span class="code-comment">// Individual module imports</span>
+<span class="code-keyword">import</span> { CircleClient } <span class="code-keyword">from</span> <span class="code-string">'./lib/circle-client'</span>;
+<span class="code-keyword">import</span> { X402Client } <span class="code-keyword">from</span> <span class="code-string">'./lib/x402-client'</span>;
+<span class="code-keyword">import</span> { ERC8004Client } <span class="code-keyword">from</span> <span class="code-string">'./lib/erc8004'</span>;
+<span class="code-keyword">import</span> { EscrowManager } <span class="code-keyword">from</span> <span class="code-string">'./lib/escrow'</span>;
+
+<span class="code-comment">// Full control over each component</span>
+<span class="code-keyword">const</span> circle = <span class="code-keyword">new</span> <span class="code-function">CircleClient</span>(config);
+<span class="code-keyword">const</span> x402 = <span class="code-keyword">new</span> <span class="code-function">X402Client</span>({ circleClient });
+<span class="code-keyword">const</span> trust = <span class="code-keyword">new</span> <span class="code-function">ERC8004Client</span>({ chain });
+<span class="code-keyword">const</span> escrow = <span class="code-keyword">new</span> <span class="code-function">EscrowManager</span>({ circleClient });</code></pre>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
   
+  <!-- Trust -->
   <section class="trust">
     <div class="container">
-      <h2>Trust-Based Payment Limits</h2>
-      <p class="subtitle">ERC-8004 reputation scores determine how much an agent can transact. Build trust through successful transactions.</p>
-      
-      <div class="trust-grid">
-        <div class="trust-card">
-          <div class="score">90+</div>
-          <div class="level">Verified</div>
-          <div class="limit">Up to $10,000</div>
+      <div class="trust-content">
+        <div class="trust-text">
+          <h2>Trust scores unlock higher limits</h2>
+          <p>ERC-8004 reputation builds over time through successful transactions. Higher trust means you can transact more.</p>
+          <div class="trust-features">
+            <div class="trust-feature">
+              <div class="trust-feature-icon">✓</div>
+              On-chain identity verification
+            </div>
+            <div class="trust-feature">
+              <div class="trust-feature-icon">✓</div>
+              Transaction history tracking
+            </div>
+            <div class="trust-feature">
+              <div class="trust-feature-icon">✓</div>
+              Feedback from counterparties
+            </div>
+            <div class="trust-feature">
+              <div class="trust-feature-icon">✓</div>
+              Automatic limit adjustments
+            </div>
+          </div>
         </div>
-        <div class="trust-card">
-          <div class="score">80+</div>
-          <div class="level">Trusted</div>
-          <div class="limit">Up to $1,000</div>
-        </div>
-        <div class="trust-card">
-          <div class="score">70+</div>
-          <div class="level">Established</div>
-          <div class="limit">Up to $500</div>
-        </div>
-        <div class="trust-card">
-          <div class="score">50+</div>
-          <div class="level">Emerging</div>
-          <div class="limit">Up to $100</div>
+        <div class="trust-visual">
+          <div class="trust-card">
+            <div class="trust-score">90+</div>
+            <div class="trust-level">Verified</div>
+            <div class="trust-limit">Up to $10,000</div>
+          </div>
+          <div class="trust-card">
+            <div class="trust-score">80+</div>
+            <div class="trust-level">Trusted</div>
+            <div class="trust-limit">Up to $1,000</div>
+          </div>
+          <div class="trust-card">
+            <div class="trust-score">70+</div>
+            <div class="trust-level">Established</div>
+            <div class="trust-limit">Up to $500</div>
+          </div>
+          <div class="trust-card">
+            <div class="trust-score">50+</div>
+            <div class="trust-level">Emerging</div>
+            <div class="trust-limit">Up to $100</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
   
-  <section class="cta">
+  <!-- Features Deep Dive -->
+  <section class="features">
     <div class="container">
-      <h2>Ready to Build?</h2>
-      <p>Start accepting and sending USDC payments in minutes.</p>
-      <a href="https://github.com/itsGustav/usdc-agent" class="btn btn-primary">View on GitHub</a>
+      <div class="section-header">
+        <span class="section-label">Features</span>
+        <h2 class="section-title">Built for the agentic economy</h2>
+        <p class="section-subtitle">Everything you need to build payment-enabled AI agents.</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card large">
+          <div class="feature-icon">🔐</div>
+          <div class="feature-content">
+            <h3>x402 Payment Protocol</h3>
+            <p>When Agent A calls Agent B's API and gets a 402 Payment Required response, USDC Agent automatically parses the payment request, sends the USDC, and retries with proof of payment. No invoices, no manual steps, no waiting.</p>
+            <a href="./x402-integration.md" class="feature-link">Learn about x402 →</a>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏦</div>
+          <div class="feature-content">
+            <h3>Escrow Templates</h3>
+            <p>Pre-built templates for freelance milestones, real estate deposits, e-commerce protection, and P2P trades. Just pick a template and customize.</p>
+            <a href="./escrow-templates.md" class="feature-link">View templates →</a>
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <div class="feature-content">
+            <h3>Analytics & Reporting</h3>
+            <p>Track spending by category, monitor transaction volume, export for accounting. Full visibility into your agent's financial activity.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to build the future?</h2>
+        <p>Join the agents already transacting on USDC Agent.</p>
+        <div class="cta-buttons">
+          <a href="https://github.com/itsGustav/usdc-agent" class="btn btn-primary btn-large">Get Started →</a>
+          <a href="https://github.com/itsGustav/usdc-agent/tree/main/docs" class="btn btn-secondary btn-large">Read the Docs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Footer -->
   <footer>
     <div class="container">
-      <p>Built for the <strong>Circle USDC Hackathon 2026</strong> 🏆</p>
-      <p style="margin-top: 10px;">
-        <a href="https://github.com/itsGustav/usdc-agent">GitHub</a> · 
-        <a href="https://circle.com">Circle</a> · 
-        <a href="https://eips.ethereum.org/EIPS/eip-8004">ERC-8004</a>
-      </p>
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="https://github.com/itsGustav/usdc-agent">GitHub</a>
+          <a href="https://github.com/itsGustav/usdc-agent/tree/main/docs">Documentation</a>
+          <a href="https://circle.com">Circle</a>
+          <a href="https://eips.ethereum.org/EIPS/eip-8004">ERC-8004</a>
+        </div>
+        <div class="footer-badge">
+          🏆 Built for Circle USDC Hackathon 2026
+        </div>
+      </div>
     </div>
   </footer>
   
   <script>
     // Tab switching
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        // Remove active from all tabs and contents
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         
-        // Add active to clicked tab and corresponding content
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+    
+    // Copy button
+    document.querySelectorAll('.code-block-copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const code = btn.closest('.code-block').querySelector('code').innerText;
+        navigator.clipboard.writeText(code);
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
   </script>
