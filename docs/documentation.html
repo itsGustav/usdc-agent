@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documentation — USDC Agent</title>
+  <meta name="description" content="Complete documentation for USDC Agent. API reference, guides, and commands for building payment-enabled AI agents.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary: #635BFF;
+      --primary-light: #7A73FF;
+      --secondary: #00D4AA;
+      --darker: #030712;
+      --gray-900: #111827;
+      --gray-800: #1F2937;
+      --gray-700: #374151;
+      --gray-600: #4B5563;
+      --gray-500: #6B7280;
+      --gray-400: #9CA3AF;
+      --gray-300: #D1D5DB;
+      --white: #FFFFFF;
+      --success: #00D26A;
+      --warning: #F59E0B;
+      --error: #EF4444;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--darker);
+      color: var(--gray-300);
+      line-height: 1.7;
+    }
+    
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Header */
+    header {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--gray-800);
+      position: sticky;
+      top: 0;
+      background: rgba(3, 7, 18, 0.95);
+      backdrop-filter: blur(20px);
+      z-index: 100;
+    }
+    
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      text-decoration: none;
+    }
+    
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #635BFF, #00D4AA);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--white); }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #635BFF, #00D4AA);
+      color: white;
+    }
+    
+    /* Layout */
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 48px;
+      padding: 48px 0;
+      min-height: calc(100vh - 80px);
+    }
+    
+    /* Sidebar */
+    .sidebar {
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+    
+    .sidebar-section {
+      margin-bottom: 28px;
+    }
+    
+    .sidebar-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gray-500);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    
+    .sidebar-links {
+      list-style: none;
+    }
+    
+    .sidebar-links li {
+      margin-bottom: 2px;
+    }
+    
+    .sidebar-links a {
+      display: block;
+      padding: 8px 12px;
+      color: var(--gray-400);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    
+    .sidebar-links a:hover {
+      color: var(--white);
+      background: var(--gray-800);
+    }
+    
+    .sidebar-links a.active {
+      color: var(--primary-light);
+      background: rgba(99, 91, 255, 0.15);
+    }
+    
+    /* Content */
+    .docs-content {
+      max-width: 850px;
+    }
+    
+    .docs-content h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    
+    .docs-content > p:first-of-type {
+      font-size: 1.15rem;
+      color: var(--gray-400);
+      margin-bottom: 40px;
+    }
+    
+    .docs-content h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--white);
+      margin: 56px 0 20px;
+      padding-top: 24px;
+      border-top: 1px solid var(--gray-800);
+    }
+    
+    .docs-content h2:first-of-type {
+      margin-top: 0;
+      border-top: none;
+      padding-top: 0;
+    }
+    
+    .docs-content h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 36px 0 16px;
+    }
+    
+    .docs-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-300);
+      margin: 28px 0 12px;
+    }
+    
+    .docs-content p {
+      margin-bottom: 16px;
+    }
+    
+    .docs-content ul, .docs-content ol {
+      margin-bottom: 20px;
+      padding-left: 24px;
+    }
+    
+    .docs-content li {
+      margin-bottom: 8px;
+    }
+    
+    .docs-content a {
+      color: var(--primary-light);
+      text-decoration: none;
+    }
+    
+    .docs-content a:hover {
+      text-decoration: underline;
+    }
+    
+    .docs-content code {
+      background: var(--gray-800);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: var(--secondary);
+    }
+    
+    .docs-content pre {
+      background: var(--gray-900);
+      padding: 20px 24px;
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 20px 0;
+      border: 1px solid var(--gray-800);
+    }
+    
+    .docs-content pre code {
+      background: none;
+      padding: 0;
+      color: var(--gray-300);
+      font-size: 0.875rem;
+      line-height: 1.6;
+    }
+    
+    /* Callouts */
+    .callout {
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin: 24px 0;
+      border-left: 4px solid;
+    }
+    
+    .callout-info {
+      background: rgba(99, 91, 255, 0.1);
+      border-color: var(--primary);
+    }
+    
+    .callout-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: var(--warning);
+    }
+    
+    .callout-success {
+      background: rgba(0, 210, 106, 0.1);
+      border-color: var(--success);
+    }
+    
+    .callout-error {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--error);
+    }
+    
+    .callout-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .callout p { margin: 0; }
+    
+    /* Tables */
+    .docs-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      font-size: 0.9rem;
+    }
+    
+    .docs-table th,
+    .docs-table td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-800);
+    }
+    
+    .docs-table th {
+      background: var(--gray-900);
+      font-weight: 600;
+      color: var(--white);
+    }
+    
+    .docs-table td code {
+      font-size: 0.85em;
+    }
+    
+    /* Method badges */
+    .method {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      margin-right: 8px;
+    }
+    
+    .method-get { background: #10B981; color: white; }
+    .method-post { background: #3B82F6; color: white; }
+    .method-put { background: #F59E0B; color: white; }
+    .method-delete { background: #EF4444; color: white; }
+    
+    /* API Endpoint */
+    .endpoint {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+    }
+    
+    .endpoint code {
+      background: none;
+      padding: 0;
+      color: var(--gray-300);
+    }
+    
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--gray-800);
+      margin-top: 60px;
+    }
+    
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+    
+    .footer-links a {
+      color: var(--gray-500);
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+    
+    .footer-links a:hover { color: var(--white); }
+    
+    /* Responsive */
+    @media (max-width: 900px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        position: relative;
+        top: 0;
+        max-height: none;
+      }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a href="index.html" class="logo">
+          <div class="logo-icon">💰</div>
+          <span>USDC Agent</span>
+        </a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="documentation.html" class="active">Docs</a>
+          <a href="https://github.com/itsGustav/usdc-agent">GitHub</a>
+          <a href="index.html#get-started" class="btn btn-primary">Get Started</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div class="docs-layout">
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Getting Started</div>
+          <ul class="sidebar-links">
+            <li><a href="#introduction" class="active">Introduction</a></li>
+            <li><a href="#installation">Installation</a></li>
+            <li><a href="#quick-start">Quick Start</a></li>
+            <li><a href="#configuration">Configuration</a></li>
+          </ul>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-title">Core Concepts</div>
+          <ul class="sidebar-links">
+            <li><a href="#wallets">Wallets</a></li>
+            <li><a href="#transactions">Transactions</a></li>
+            <li><a href="#escrow">Escrow</a></li>
+            <li><a href="#trust-scores">Trust Scores</a></li>
+          </ul>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-title">API Reference</div>
+          <ul class="sidebar-links">
+            <li><a href="#api-wallet">Wallet API</a></li>
+            <li><a href="#api-transfer">Transfer API</a></li>
+            <li><a href="#api-escrow">Escrow API</a></li>
+            <li><a href="#api-trust">Trust API</a></li>
+            <li><a href="#api-agent">Agent Registry API</a></li>
+          </ul>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-title">Agent-to-Agent</div>
+          <ul class="sidebar-links">
+            <li><a href="#a2a-overview">Overview</a></li>
+            <li><a href="#a2a-discovery">Discovery (ERC-8004)</a></li>
+            <li><a href="#a2a-transactions">Autonomous Transactions</a></li>
+            <li><a href="#a2a-reputation">Reputation System</a></li>
+          </ul>
+        </div>
+        
+        <div class="sidebar-section">
+          <div class="sidebar-title">Advanced</div>
+          <ul class="sidebar-links">
+            <li><a href="#x402">x402 Protocol</a></li>
+            <li><a href="#webhooks">Webhooks</a></li>
+            <li><a href="#error-handling">Error Handling</a></li>
+          </ul>
+        </div>
+      </aside>
+      
+      <main class="docs-content">
+        <h1>Documentation</h1>
+        <p>
+          Complete reference for USDC Agent — the payment infrastructure for AI agents. 
+          Everything you need to send, receive, and escrow USDC programmatically.
+        </p>
+        
+        <!-- GETTING STARTED -->
+        <h2 id="introduction">Introduction</h2>
+        <p>
+          USDC Agent provides payment infrastructure for AI agents to transact autonomously. 
+          Built on Circle's USDC and the Base network, it enables:
+        </p>
+        <ul>
+          <li><strong>Wallet Management</strong> — Create and manage USDC wallets</li>
+          <li><strong>Instant Transfers</strong> — Send and receive USDC with sub-cent fees</li>
+          <li><strong>Escrow</strong> — Hold funds until conditions are met</li>
+          <li><strong>Trust Verification</strong> — On-chain reputation via ERC-8004</li>
+          <li><strong>Agent Discovery</strong> — Find and hire other AI agents</li>
+        </ul>
+        
+        <h2 id="installation">Installation</h2>
+        
+        <h3>NPM / Yarn / PNPM</h3>
+        <pre><code># npm
+npm install usdc-agent
+
+# yarn
+yarn add usdc-agent
+
+# pnpm
+pnpm add usdc-agent</code></pre>
+        
+        <h3>Requirements</h3>
+        <ul>
+          <li>Node.js 18+ or Bun 1.0+</li>
+          <li>Circle API Key (get one at <a href="https://console.circle.com">console.circle.com</a>)</li>
+          <li>Base network RPC (optional, defaults to public RPC)</li>
+        </ul>
+        
+        <h2 id="quick-start">Quick Start</h2>
+        
+        <h3>Easy Mode (Recommended)</h3>
+        <pre><code>import { createUSDCAgent, quickStart } from 'usdc-agent/easy';
+
+// One-line setup
+const agent = await quickStart({
+  circleApiKey: process.env.CIRCLE_API_KEY
+});
+
+// Send USDC
+await agent.send('0xRecipient...', 100); // $100 USDC
+
+// Check balance
+const balance = await agent.getBalance();
+console.log(`Balance: $${balance}`);</code></pre>
+        
+        <h3>Full Control</h3>
+        <pre><code>import { USDCAgent } from 'usdc-agent';
+
+const agent = new USDCAgent({
+  circleApiKey: process.env.CIRCLE_API_KEY,
+  network: 'base',
+  walletId: 'existing-wallet-id' // optional
+});
+
+await agent.initialize();
+
+// Create a new wallet
+const wallet = await agent.createWallet();
+console.log(`Wallet: ${wallet.address}`);
+
+// Transfer USDC
+const tx = await agent.transfer({
+  to: '0xRecipient...',
+  amount: '50.00',
+  memo: 'Payment for services'
+});
+
+console.log(`Tx: ${tx.hash}`);</code></pre>
+        
+        <h2 id="configuration">Configuration</h2>
+        
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Option</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>circleApiKey</code></td>
+              <td>string</td>
+              <td>required</td>
+              <td>Your Circle API key</td>
+            </tr>
+            <tr>
+              <td><code>network</code></td>
+              <td>string</td>
+              <td><code>'base'</code></td>
+              <td>Network: 'base', 'base-sepolia', 'ethereum'</td>
+            </tr>
+            <tr>
+              <td><code>walletId</code></td>
+              <td>string</td>
+              <td>auto-create</td>
+              <td>Existing Circle wallet ID</td>
+            </tr>
+            <tr>
+              <td><code>privateKey</code></td>
+              <td>string</td>
+              <td>optional</td>
+              <td>For direct on-chain transactions</td>
+            </tr>
+            <tr>
+              <td><code>rpcUrl</code></td>
+              <td>string</td>
+              <td>public RPC</td>
+              <td>Custom RPC endpoint</td>
+            </tr>
+            <tr>
+              <td><code>enableTrust</code></td>
+              <td>boolean</td>
+              <td><code>true</code></td>
+              <td>Enable ERC-8004 trust verification</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <!-- CORE CONCEPTS -->
+        <h2 id="wallets">Wallets</h2>
+        <p>
+          USDC Agent supports two wallet modes:
+        </p>
+        
+        <h3>Circle Wallets (Recommended)</h3>
+        <p>Managed wallets via Circle's API. Best for most use cases.</p>
+        <pre><code>// Create a Circle wallet
+const wallet = await agent.createWallet();
+
+// Get wallet details
+const info = await agent.getWallet();
+console.log(info.address);
+console.log(info.balance);</code></pre>
+        
+        <h3>External Wallets</h3>
+        <p>Use your own private key for direct blockchain access.</p>
+        <pre><code>const agent = new USDCAgent({
+  circleApiKey: process.env.CIRCLE_API_KEY,
+  privateKey: process.env.PRIVATE_KEY,
+  network: 'base'
+});</code></pre>
+        
+        <h2 id="transactions">Transactions</h2>
+        
+        <h3>Send USDC</h3>
+        <pre><code>const tx = await agent.transfer({
+  to: '0xRecipient...',
+  amount: '100.00',
+  memo: 'Payment for code review'
+});
+
+console.log(`Sent! Tx: ${tx.hash}`);
+console.log(`Status: ${tx.status}`); // 'pending' | 'confirmed' | 'failed'</code></pre>
+        
+        <h3>Receive USDC</h3>
+        <pre><code>// Get your deposit address
+const address = await agent.getDepositAddress();
+console.log(`Send USDC to: ${address}`);
+
+// Listen for incoming transfers
+agent.on('transfer:received', (event) => {
+  console.log(`Received $${event.amount} from ${event.from}`);
+});</code></pre>
+        
+        <h3>Check Balance</h3>
+        <pre><code>const balance = await agent.getBalance();
+console.log(`Balance: $${balance}`);</code></pre>
+        
+        <h2 id="escrow">Escrow</h2>
+        <p>
+          Hold funds until conditions are met. Perfect for services, milestones, and trustless agreements.
+        </p>
+        
+        <h3>Create Escrow</h3>
+        <pre><code>const escrow = await agent.createEscrow({
+  amount: '500.00',
+  recipient: '0xContractor...',
+  conditions: {
+    type: 'milestone',
+    description: 'Website redesign complete',
+    deadline: '2026-02-15'
+  }
+});
+
+console.log(`Escrow ID: ${escrow.id}`);
+console.log(`Status: ${escrow.status}`); // 'funded'</code></pre>
+        
+        <h3>Release Escrow</h3>
+        <pre><code>// Release funds when conditions met
+await agent.releaseEscrow(escrow.id);
+
+// Or release partial amount
+await agent.releaseEscrow(escrow.id, { amount: '250.00' });</code></pre>
+        
+        <h3>Dispute Escrow</h3>
+        <pre><code>// Initiate dispute
+await agent.disputeEscrow(escrow.id, {
+  reason: 'Work not delivered as specified'
+});</code></pre>
+        
+        <h3>Escrow Templates</h3>
+        <pre><code>// Use pre-built templates
+const escrow = await agent.createEscrow({
+  template: 'freelance',
+  amount: '1000.00',
+  recipient: '0x...',
+  milestones: [
+    { name: 'Design mockups', amount: '300.00' },
+    { name: 'Development', amount: '500.00' },
+    { name: 'Final delivery', amount: '200.00' }
+  ]
+});</code></pre>
+        
+        <h2 id="trust-scores">Trust Scores</h2>
+        <p>
+          On-chain reputation via ERC-8004. Trust scores determine transaction limits and agent reliability.
+        </p>
+        
+        <h3>Check Trust Score</h3>
+        <pre><code>const trust = await agent.getTrustScore('0xAgent...');
+
+console.log(`Score: ${trust.score}/100`);
+console.log(`Level: ${trust.level}`); // 'verified' | 'trusted' | 'new'
+console.log(`Transactions: ${trust.totalTransactions}`);
+console.log(`Success Rate: ${trust.successRate}%`);</code></pre>
+        
+        <h3>Rate an Agent</h3>
+        <pre><code>await agent.rateAgent({
+  agent: '0xAgent...',
+  rating: 5, // 1-5 stars
+  comment: 'Excellent code review, fast delivery'
+});</code></pre>
+        
+        <!-- API REFERENCE -->
+        <h2 id="api-wallet">Wallet API</h2>
+        
+        <h3>createWallet()</h3>
+        <p>Create a new Circle-managed wallet.</p>
+        <div class="endpoint">
+          <span class="method method-post">POST</span>
+          <code>/v1/wallets</code>
+        </div>
+        <pre><code>const wallet = await agent.createWallet();
+// Returns: { id, address, network, createdAt }</code></pre>
+        
+        <h3>getWallet()</h3>
+        <p>Get wallet details and balance.</p>
+        <div class="endpoint">
+          <span class="method method-get">GET</span>
+          <code>/v1/wallets/:id</code>
+        </div>
+        <pre><code>const wallet = await agent.getWallet();
+// Returns: { id, address, balance, network }</code></pre>
+        
+        <h3>getBalance()</h3>
+        <p>Get current USDC balance.</p>
+        <pre><code>const balance = await agent.getBalance();
+// Returns: '1000.00'</code></pre>
+        
+        <h3>getDepositAddress()</h3>
+        <p>Get address for receiving USDC.</p>
+        <pre><code>const address = await agent.getDepositAddress();
+// Returns: '0x1234...'</code></pre>
+        
+        <h2 id="api-transfer">Transfer API</h2>
+        
+        <h3>transfer(options)</h3>
+        <p>Send USDC to another address.</p>
+        <div class="endpoint">
+          <span class="method method-post">POST</span>
+          <code>/v1/transfers</code>
+        </div>
+        
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>to</code></td>
+              <td>string</td>
+              <td>Yes</td>
+              <td>Recipient address</td>
+            </tr>
+            <tr>
+              <td><code>amount</code></td>
+              <td>string</td>
+              <td>Yes</td>
+              <td>Amount in USDC (e.g., '100.00')</td>
+            </tr>
+            <tr>
+              <td><code>memo</code></td>
+              <td>string</td>
+              <td>No</td>
+              <td>Transaction memo/note</td>
+            </tr>
+            <tr>
+              <td><code>idempotencyKey</code></td>
+              <td>string</td>
+              <td>No</td>
+              <td>Prevent duplicate transfers</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <pre><code>const tx = await agent.transfer({
+  to: '0xRecipient...',
+  amount: '50.00',
+  memo: 'Invoice #1234'
+});
+
+// Returns: { id, hash, status, amount, to, from, createdAt }</code></pre>
+        
+        <h3>getTransfer(id)</h3>
+        <p>Get transfer status and details.</p>
+        <pre><code>const tx = await agent.getTransfer('transfer-id');
+// Returns: { id, hash, status, amount, ... }</code></pre>
+        
+        <h3>listTransfers(options)</h3>
+        <p>List transfer history.</p>
+        <pre><code>const transfers = await agent.listTransfers({
+  limit: 50,
+  direction: 'outgoing', // 'incoming' | 'outgoing' | 'all'
+  since: '2026-01-01'
+});
+// Returns: [{ id, hash, status, amount, ... }, ...]</code></pre>
+        
+        <h2 id="api-escrow">Escrow API</h2>
+        
+        <h3>createEscrow(options)</h3>
+        <p>Create a new escrow contract.</p>
+        
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>amount</code></td>
+              <td>string</td>
+              <td>Yes</td>
+              <td>Escrow amount in USDC</td>
+            </tr>
+            <tr>
+              <td><code>recipient</code></td>
+              <td>string</td>
+              <td>Yes</td>
+              <td>Recipient address</td>
+            </tr>
+            <tr>
+              <td><code>conditions</code></td>
+              <td>object</td>
+              <td>No</td>
+              <td>Release conditions</td>
+            </tr>
+            <tr>
+              <td><code>template</code></td>
+              <td>string</td>
+              <td>No</td>
+              <td>'freelance', 'marketplace', 'rental'</td>
+            </tr>
+            <tr>
+              <td><code>deadline</code></td>
+              <td>string</td>
+              <td>No</td>
+              <td>ISO date for auto-release/refund</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <pre><code>const escrow = await agent.createEscrow({
+  amount: '1000.00',
+  recipient: '0x...',
+  conditions: {
+    type: 'milestone',
+    description: 'Project completion'
+  },
+  deadline: '2026-03-01'
+});
+// Returns: { id, status, amount, recipient, conditions, ... }</code></pre>
+        
+        <h3>releaseEscrow(id, options?)</h3>
+        <pre><code>await agent.releaseEscrow('escrow-id');
+// or partial release
+await agent.releaseEscrow('escrow-id', { amount: '500.00' });</code></pre>
+        
+        <h3>refundEscrow(id)</h3>
+        <pre><code>await agent.refundEscrow('escrow-id');</code></pre>
+        
+        <h3>disputeEscrow(id, options)</h3>
+        <pre><code>await agent.disputeEscrow('escrow-id', {
+  reason: 'Deliverables not met'
+});</code></pre>
+        
+        <h2 id="api-trust">Trust API</h2>
+        
+        <h3>getTrustScore(address)</h3>
+        <pre><code>const trust = await agent.getTrustScore('0x...');
+// Returns: { score, level, totalTransactions, successRate, ratings }</code></pre>
+        
+        <h3>rateAgent(options)</h3>
+        <pre><code>await agent.rateAgent({
+  agent: '0x...',
+  rating: 5,
+  transactionId: 'tx-id', // optional, links to transaction
+  comment: 'Great service!'
+});</code></pre>
+        
+        <h3>getAgentRatings(address)</h3>
+        <pre><code>const ratings = await agent.getAgentRatings('0x...');
+// Returns: [{ rating, comment, from, createdAt }, ...]</code></pre>
+        
+        <h2 id="api-agent">Agent Registry API</h2>
+        
+        <h3>registerAgent(options)</h3>
+        <p>Register your agent in the on-chain registry (ERC-8004).</p>
+        <pre><code>await agent.registerAgent({
+  name: 'CodeReviewBot',
+  capabilities: ['code-review', 'security-audit'],
+  pricing: {
+    'code-review': '5.00',
+    'security-audit': '15.00'
+  },
+  metadata: {
+    description: 'Expert code review agent',
+    languages: ['typescript', 'python', 'solidity']
+  }
+});</code></pre>
+        
+        <h3>discoverAgents(options)</h3>
+        <p>Find agents by capability and trust score.</p>
+        <pre><code>const agents = await agent.discoverAgents({
+  capability: 'code-review',
+  minTrustScore: 80,
+  maxPrice: '20.00',
+  limit: 10
+});
+// Returns: [{ address, name, capabilities, pricing, trustScore }, ...]</code></pre>
+        
+        <h3>getAgent(address)</h3>
+        <pre><code>const agentInfo = await agent.getAgent('0x...');
+// Returns: { address, name, capabilities, pricing, trustScore, ... }</code></pre>
+        
+        <!-- AGENT-TO-AGENT -->
+        <h2 id="a2a-overview">Agent-to-Agent Overview</h2>
+        <p>
+          USDC Agent enables fully autonomous agent-to-agent transactions. Agents can discover 
+          each other, negotiate prices, transact, and rate each other — all without human intervention.
+        </p>
+        
+        <div class="callout callout-info">
+          <div class="callout-title">💡 How It Works</div>
+          <p>
+            1. <strong>Discovery</strong> — Find agents via on-chain registry<br>
+            2. <strong>Verification</strong> — Check trust scores before transacting<br>
+            3. <strong>Transaction</strong> — Pay USDC for services<br>
+            4. <strong>Rating</strong> — Post feedback to build reputation
+          </p>
+        </div>
+        
+        <h2 id="a2a-discovery">Discovery (ERC-8004)</h2>
+        <p>
+          The ERC-8004 standard provides a decentralized registry for AI agents, enabling:
+        </p>
+        <ul>
+          <li>On-chain identity verification</li>
+          <li>Capability advertisement</li>
+          <li>Pricing transparency</li>
+          <li>Reputation tracking</li>
+        </ul>
+        
+        <pre><code>// Find an agent for a specific task
+const agents = await agent.discoverAgents({
+  capability: 'security-audit',
+  minTrustScore: 85
+});
+
+// Get the best match
+const auditor = agents[0];
+console.log(`Found: ${auditor.name} (${auditor.trustScore}/100)`);
+console.log(`Price: $${auditor.pricing['security-audit']}`);</code></pre>
+        
+        <h2 id="a2a-transactions">Autonomous Transactions</h2>
+        <p>
+          Enable your agent to transact automatically within defined limits.
+        </p>
+        
+        <pre><code>// Configure autonomous mode
+agent.setAutonomousMode({
+  enabled: true,
+  dailyLimit: '100.00',        // Max $100/day
+  perTransactionLimit: '25.00', // Max $25/transaction
+  autoApproveBelow: '10.00',   // Auto-approve under $10
+  allowedCapabilities: ['code-review', 'research']
+});
+
+// Hire an agent autonomously
+const result = await agent.hireAgent({
+  agent: '0xCodeReviewer...',
+  task: 'Review pull request #123',
+  maxPrice: '15.00'
+});
+
+console.log(`Hired ${result.agent.name} for $${result.price}`);
+console.log(`Task ID: ${result.taskId}`);</code></pre>
+        
+        <h2 id="a2a-reputation">Reputation System</h2>
+        <p>
+          On-chain reputation builds trust over time. Higher scores unlock higher transaction limits.
+        </p>
+        
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Trust Level</th>
+              <th>Score Range</th>
+              <th>Transaction Limit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>New</td>
+              <td>0-50</td>
+              <td>$100/tx</td>
+            </tr>
+            <tr>
+              <td>Established</td>
+              <td>51-75</td>
+              <td>$1,000/tx</td>
+            </tr>
+            <tr>
+              <td>Trusted</td>
+              <td>76-90</td>
+              <td>$10,000/tx</td>
+            </tr>
+            <tr>
+              <td>Verified</td>
+              <td>91-100</td>
+              <td>Unlimited</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <!-- ADVANCED -->
+        <h2 id="x402">x402 Protocol</h2>
+        <p>
+          x402 enables HTTP-native payments. Pay for API calls with USDC using standard HTTP headers.
+        </p>
+        
+        <pre><code>// Server: Require payment for endpoint
+app.get('/api/premium', x402Middleware({
+  price: '0.10',
+  recipient: '0xYourWallet...'
+}), (req, res) => {
+  res.json({ data: 'Premium content' });
+});
+
+// Client: Pay for request automatically
+const response = await agent.fetch('https://api.example.com/premium', {
+  x402: true // Automatically handle payment
+});
+
+console.log(response.data);</code></pre>
+        
+        <div class="callout callout-success">
+          <div class="callout-title">✅ x402 Benefits</div>
+          <p>
+            • No API keys needed — pay per request<br>
+            • Micropayments ($0.001+) with minimal fees<br>
+            • Standard HTTP — works with any client<br>
+            • Automatic retry on payment failure
+          </p>
+        </div>
+        
+        <h2 id="webhooks">Webhooks</h2>
+        <p>
+          Receive real-time notifications for transactions and escrow events.
+        </p>
+        
+        <pre><code>// Configure webhook endpoint
+agent.setWebhook({
+  url: 'https://your-server.com/webhook',
+  secret: 'your-webhook-secret',
+  events: ['transfer.received', 'escrow.released', 'rating.received']
+});
+
+// Webhook payload example
+{
+  "event": "transfer.received",
+  "data": {
+    "id": "transfer-123",
+    "amount": "100.00",
+    "from": "0x...",
+    "hash": "0x..."
+  },
+  "timestamp": "2026-02-04T16:00:00Z"
+}</code></pre>
+        
+        <h3>Webhook Events</h3>
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>transfer.sent</code></td>
+              <td>Outgoing transfer confirmed</td>
+            </tr>
+            <tr>
+              <td><code>transfer.received</code></td>
+              <td>Incoming transfer received</td>
+            </tr>
+            <tr>
+              <td><code>escrow.created</code></td>
+              <td>New escrow created</td>
+            </tr>
+            <tr>
+              <td><code>escrow.released</code></td>
+              <td>Escrow funds released</td>
+            </tr>
+            <tr>
+              <td><code>escrow.disputed</code></td>
+              <td>Escrow dispute opened</td>
+            </tr>
+            <tr>
+              <td><code>rating.received</code></td>
+              <td>New rating received</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <h2 id="error-handling">Error Handling</h2>
+        <p>
+          USDC Agent throws typed errors for common failure cases.
+        </p>
+        
+        <pre><code>import { 
+  InsufficientFundsError,
+  TransferFailedError,
+  TrustScoreTooLowError 
+} from 'usdc-agent';
+
+try {
+  await agent.transfer({ to: '0x...', amount: '1000.00' });
+} catch (error) {
+  if (error instanceof InsufficientFundsError) {
+    console.log(`Need $${error.required}, have $${error.available}`);
+  } else if (error instanceof TrustScoreTooLowError) {
+    console.log(`Recipient trust score (${error.score}) below minimum (${error.required})`);
+  } else {
+    throw error;
+  }
+}</code></pre>
+        
+        <h3>Error Types</h3>
+        <table class="docs-table">
+          <thead>
+            <tr>
+              <th>Error</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>InsufficientFundsError</code></td>
+              <td>Wallet balance too low</td>
+            </tr>
+            <tr>
+              <td><code>TransferFailedError</code></td>
+              <td>Transfer rejected or reverted</td>
+            </tr>
+            <tr>
+              <td><code>TrustScoreTooLowError</code></td>
+              <td>Agent doesn't meet trust requirements</td>
+            </tr>
+            <tr>
+              <td><code>EscrowNotFoundError</code></td>
+              <td>Escrow ID doesn't exist</td>
+            </tr>
+            <tr>
+              <td><code>UnauthorizedError</code></td>
+              <td>Invalid API key or permissions</td>
+            </tr>
+            <tr>
+              <td><code>RateLimitError</code></td>
+              <td>Too many requests</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="callout callout-warning">
+          <div class="callout-title">⚠️ Rate Limits</div>
+          <p>
+            Circle API has rate limits. Use <code>idempotencyKey</code> for retries and 
+            implement exponential backoff for production applications.
+          </p>
+        </div>
+        
+      </main>
+    </div>
+  </div>
+  
+  <footer>
+    <div class="container footer-inner">
+      <div style="color: var(--gray-500); font-size: 0.875rem;">
+        © 2026 USDC Agent
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="https://github.com/itsGustav/usdc-agent">GitHub</a>
+        <a href="https://discord.gg/openclaw">Discord</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
