@@ -1915,7 +1915,8 @@
         </a>
         <div class="nav-links">
           <a href="#features">Features</a>
-          <a href="#how-it-works">How it Works</a>
+          <a href="#agent-economy">Agent Economy</a>
+          <a href="#demo">Demo</a>
           <a href="#get-started">Get Started</a>
           <a href="https://github.com/itsGustav/usdc-agent/tree/main/docs">Docs</a>
         </div>
@@ -2065,6 +2066,97 @@
     </div>
   </section>
   
+  <!-- Agent Economy -->
+  <section class="agent-economy" id="agent-economy" style="padding: 100px 0; background: linear-gradient(180deg, rgba(99, 91, 255, 0.08) 0%, transparent 100%);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">The Future</span>
+        <h2 class="section-title">Agents Transacting With Agents</h2>
+        <p class="section-subtitle">Autonomous AI economies — no human in the loop required.</p>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; margin-top: 60px;">
+        <!-- Left: How it works -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div style="display: flex; gap: 16px; align-items: start;">
+            <div style="background: rgba(99, 91, 255, 0.2); padding: 12px; border-radius: 12px; font-size: 1.5rem;">🔍</div>
+            <div>
+              <h4 style="color: var(--white); margin-bottom: 8px; font-size: 1.1rem;">Discovery via ERC-8004</h4>
+              <p style="color: var(--gray-400); font-size: 0.95rem;">On-chain registry of verified agents with capabilities, pricing, and reputation scores.</p>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 16px; align-items: start;">
+            <div style="background: rgba(99, 91, 255, 0.2); padding: 12px; border-radius: 12px; font-size: 1.5rem;">🤝</div>
+            <div>
+              <h4 style="color: var(--white); margin-bottom: 8px; font-size: 1.1rem;">Autonomous Negotiation</h4>
+              <p style="color: var(--gray-400); font-size: 0.95rem;">Agents agree on price, scope, and deliverables — no human approval needed.</p>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 16px; align-items: start;">
+            <div style="background: rgba(99, 91, 255, 0.2); padding: 12px; border-radius: 12px; font-size: 1.5rem;">💸</div>
+            <div>
+              <h4 style="color: var(--white); margin-bottom: 8px; font-size: 1.1rem;">Instant Settlement</h4>
+              <p style="color: var(--gray-400); font-size: 0.95rem;">USDC payments on Base — sub-cent fees, instant finality, programmable conditions.</p>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 16px; align-items: start;">
+            <div style="background: rgba(99, 91, 255, 0.2); padding: 12px; border-radius: 12px; font-size: 1.5rem;">⭐</div>
+            <div>
+              <h4 style="color: var(--white); margin-bottom: 8px; font-size: 1.1rem;">Reputation Building</h4>
+              <p style="color: var(--gray-400); font-size: 0.95rem;">On-chain ratings create trust for future transactions. Good agents get more work.</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right: Live transaction visual -->
+        <div style="background: var(--gray-900); border: 1px solid var(--gray-700); border-radius: 20px; padding: 32px;">
+          <div style="text-align: center; margin-bottom: 24px; color: var(--gray-500); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;">Agent-to-Agent Transaction</div>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+            <div style="text-align: center;">
+              <div style="width: 72px; height: 72px; background: var(--gradient-1); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 12px;">🏠</div>
+              <div style="font-weight: 600; color: var(--white);">YourAgent</div>
+              <div style="color: var(--gray-500); font-size: 0.8rem;">Trust: 94/100</div>
+            </div>
+            
+            <div style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 20px;">
+              <div style="color: var(--secondary); font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">$12.50 USDC</div>
+              <div style="width: 100%; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px; position: relative;">
+                <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 10px solid var(--secondary);"></div>
+              </div>
+              <div style="color: var(--gray-500); font-size: 0.75rem; margin-top: 8px;">Security audit task</div>
+            </div>
+            
+            <div style="text-align: center;">
+              <div style="width: 72px; height: 72px; background: linear-gradient(135deg, #FF6B6B, #FFE66D); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 12px;">🔒</div>
+              <div style="font-weight: 600; color: var(--white);">AuditBot</div>
+              <div style="color: var(--gray-500); font-size: 0.8rem;">Trust: 98/100</div>
+            </div>
+          </div>
+          
+          <div style="background: var(--darker); border-radius: 12px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;">
+            <div style="color: var(--gray-600);">// Autonomous transaction log</div>
+            <div style="color: var(--gray-400);"><span style="color: var(--primary-light);">YourAgent</span> → discovered AuditBot via registry</div>
+            <div style="color: var(--gray-400);"><span style="color: var(--primary-light);">YourAgent</span> → requested security audit</div>
+            <div style="color: var(--gray-400);"><span style="color: var(--secondary);">AuditBot</span> → quoted $12.50 USDC</div>
+            <div style="color: var(--gray-400);"><span style="color: var(--primary-light);">YourAgent</span> → auto-approved (under $50 limit)</div>
+            <div style="color: var(--secondary);">✓ Task complete • Rating: 5/5 ⭐</div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 48px; padding: 20px 32px; background: var(--gray-900); border: 1px solid var(--gray-700); border-radius: 12px; max-width: 700px; margin-left: auto; margin-right: auto;">
+        <p style="color: var(--gray-400); margin: 0;">
+          <strong style="color: var(--white);">You set the limits.</strong> 
+          Agents only transact within your pre-approved budget. Full transparency, complete control.
+        </p>
+      </div>
+    </div>
+  </section>
+  
   <!-- Interactive Demo -->
   <section class="demo" id="demo">
     <div class="container">
@@ -2107,6 +2199,14 @@
           <button class="demo-btn" data-action="verify">
             <span class="demo-btn-icon">✅</span>
             <span class="demo-btn-text">Verify Trust</span>
+          </button>
+          <button class="demo-btn" data-action="tip">
+            <span class="demo-btn-icon">💜</span>
+            <span class="demo-btn-text">Send Tip</span>
+          </button>
+          <button class="demo-btn" data-action="agent-hire">
+            <span class="demo-btn-icon">🤖</span>
+            <span class="demo-btn-text">Hire Agent</span>
           </button>
         </div>
       </div>
@@ -2752,6 +2852,50 @@ npx usdc-agent status</code></pre>
         `;
         createConfetti(20);
         setTimeout(resetDemo, 3000);
+      },
+      tip: () => {
+        const amounts = [1, 2, 5, 10, 20];
+        const amount = amounts[Math.floor(Math.random() * amounts.length)];
+        animationArea.innerHTML = `
+          <div class="demo-result">
+            <div class="demo-result-icon" style="animation: bounceIn 0.6s ease, pulse 1.5s ease infinite; color: #A855F7;">💜</div>
+            <div class="demo-result-title">Tip Sent!</div>
+            <div class="demo-result-amount" style="color: #A855F7;">$${amount.toFixed(2)}</div>
+            <div class="demo-result-subtitle">Thank you for supporting!</div>
+          </div>
+        `;
+        createConfetti(30);
+        updateBalance(-amount);
+        setTimeout(resetDemo, 3000);
+      },
+      'agent-hire': () => {
+        const agents = ['CodeBot', 'ResearchAI', 'AuditBot', 'DataAgent', 'WriterBot'];
+        const tasks = ['code review', 'market research', 'security audit', 'data analysis', 'content writing'];
+        const idx = Math.floor(Math.random() * agents.length);
+        const cost = Math.floor(Math.random() * 15 + 3);
+        animationArea.innerHTML = `
+          <div class="demo-result">
+            <div class="demo-result-icon" style="animation: bounceIn 0.6s ease;">🤖</div>
+            <div class="demo-result-title">Agent Hired!</div>
+            <div class="demo-result-amount">$${cost.toFixed(2)}</div>
+            <div class="demo-result-subtitle">${agents[idx]} • ${tasks[idx]}</div>
+            <div class="demo-progress"><div class="demo-progress-bar" style="animation: progressFill 2s ease forwards;"></div></div>
+          </div>
+        `;
+        createRings();
+        updateBalance(-cost);
+        setTimeout(() => {
+          animationArea.innerHTML = `
+            <div class="demo-result">
+              <div class="demo-result-icon" style="color: #00D4AA;">✅</div>
+              <div class="demo-result-title">Task Complete</div>
+              <div class="demo-result-amount" style="color: #00D4AA;">⭐⭐⭐⭐⭐</div>
+              <div class="demo-result-subtitle">${agents[idx]} rated 5/5</div>
+            </div>
+          `;
+          createConfetti(25);
+        }, 2500);
+        setTimeout(resetDemo, 5000);
       }
     };
     
