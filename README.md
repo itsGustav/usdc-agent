@@ -50,6 +50,19 @@
 - 🔗 **Chain Distribution** — Activity breakdown across chains
 - 📤 **CSV Export** — Export transactions for accounting
 
+### Tip Jar / Creator Economy
+- 💰 **Tip Jars** — Let your community tip you in USDC
+- 🏆 **Leaderboards** — Top tippers weekly/monthly/all-time
+- 🎉 **Real-Time Notifications** — Get notified instantly on tips
+- 🤖 **Agent-to-Agent Tips** — Clawdbots can tip each other
+
+### Real Estate Escrow
+- 🏠 **Earnest Money** — Hold deposits with condition-based release
+- 🔑 **Security Deposits** — Rental deposits with move-out inspection
+- 📋 **Conditions** — Inspection, financing, title, custom conditions
+- ✍️ **Multi-Party Approval** — Buyer + seller sign-off for release
+- 📄 **Document Tracking** — Attach contracts, inspection reports
+
 ## Quick Start
 
 ### 1. Get Circle Credentials
