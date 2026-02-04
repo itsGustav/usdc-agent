@@ -125,7 +125,7 @@ export CIRCLE_ENTITY_SECRET="your-entity-secret"
 ### 3. Install & Setup
 
 ```bash
-cd skills/usdc-agent
+cd skills/lobster-pay
 npm install
 npm run setup
 ```
@@ -149,7 +149,7 @@ npx ts-node scripts/usdc-cli.ts bridge 100 from ETH-SEPOLIA to AVAX-FUJI
 ## Architecture
 
 ```
-usdc-agent/
+lobster-pay/
 ├── SKILL.md                 # OpenClaw skill documentation
 ├── README.md                # This file
 ├── package.json             # Dependencies

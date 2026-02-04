@@ -1,4 +1,4 @@
-# USDC Agent Skill
+# Lobster Pay Skill
 
 Enable Clawdbot to interact with USDC on blockchain networks via Circle's Programmable Wallets API.
 
@@ -32,7 +32,7 @@ Add to your Clawdbot config (`~/.clawdbot/clawdbot.json`):
 {
   "skills": {
     "entries": {
-      "usdc-agent": {
+      "lobster-pay": {
         "apiKey": "YOUR_CIRCLE_API_KEY",
         "entitySecret": "YOUR_ENTITY_SECRET",
         "network": "testnet"
@@ -140,7 +140,7 @@ The skill activates on phrases like:
                     │
                     ▼
 ┌─────────────────────────────────────────┐
-│          USDC Agent Skill               │
+│          Lobster Pay Skill               │
 │   - Balance queries                     │
 │   - Transaction creation                │
 │   - Wallet management                   │
@@ -200,7 +200,7 @@ https://console.circle.com/faucets
 
 Or use the CLI:
 ```bash
-npx usdc-agent faucet --chain ETH-SEPOLIA --amount 100
+npx lobster-pay faucet --chain ETH-SEPOLIA --amount 100
 ```
 
 ## Error Handling

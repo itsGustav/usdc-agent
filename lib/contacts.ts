@@ -507,7 +507,7 @@ export function generateX402VerificationUrl(
   verificationType: 'basic' | 'full' | 'fraud' | 'report' = 'basic',
   baseUrl?: string
 ): string {
-  const base = baseUrl || process.env.X402_BASE_URL || 'https://api.usdc-agent.com';
+  const base = baseUrl || process.env.X402_BASE_URL || 'https://api.lobster-pay.com';
   return `${base}/contacts/${contactId}/verify/${verificationType}`;
 }
 

@@ -39,7 +39,7 @@ Lobster Pay gives your AI agent a wallet.
 One line of code to start:
 
 ```ts
-const agent = await createUSDCAgent(config);
+const agent = await createLobsterAgent(config);
 ```
 
 ---

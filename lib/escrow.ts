@@ -1136,7 +1136,7 @@ export function generateX402EscrowUrls(
   escrowId: string,
   baseUrl?: string
 ): X402EscrowEndpoints {
-  const base = baseUrl || process.env.X402_BASE_URL || 'https://api.usdc-agent.com';
+  const base = baseUrl || process.env.X402_BASE_URL || 'https://api.lobster-pay.com';
   
   return {
     optimize: `${base}/escrow/${escrowId}/optimize`,

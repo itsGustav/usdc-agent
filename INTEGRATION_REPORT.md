@@ -1,7 +1,7 @@
 # x402 Protocol Integration - Final Report
 
 **Date:** February 4, 2026  
-**Project:** usdc-agent + x402 Integration  
+**Project:** lobster-pay + x402 Integration  
 **For:** Circle USDC Hackathon 2025  
 **Principal:** Jakub Adamowicz, RE/MAX Orlando  
 **Status:** ✅ **COMPLETE AND PRODUCTION-READY**
@@ -10,7 +10,7 @@
 
 ## 🎯 Mission Accomplished
 
-Successfully integrated the x402 HTTP payment protocol into usdc-agent, enabling seamless micropayments for HTTP requests using Circle Programmable Wallets and USDC.
+Successfully integrated the x402 HTTP payment protocol into lobster-pay, enabling seamless micropayments for HTTP requests using Circle Programmable Wallets and USDC.
 
 ## 📊 Deliverables Summary
 
@@ -301,7 +301,7 @@ Total: 0.10 USDC in 1 payment
 ## 📁 Project Structure
 
 \`\`\`
-/tmp/usdc-agent/
+/tmp/lobster-pay/
 ├── lib/
 │   ├── x402-client.ts          ✨ NEW (471 lines)
 │   ├── x402-server.ts          ✨ NEW (462 lines)

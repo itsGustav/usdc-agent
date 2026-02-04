@@ -28,7 +28,7 @@ AI agents are everywhere—coding, browsing, making decisions. But when Agent A 
 ### How It Works
 ```typescript
 // Initialize your agent
-const agent = await createUSDCAgent({
+const agent = await createLobsterAgent({
   circleApiKey: '...',
   circleEntitySecret: '...',
 });

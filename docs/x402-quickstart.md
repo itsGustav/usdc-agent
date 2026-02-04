@@ -11,9 +11,9 @@ x402 enables seamless micropayments for HTTP requests using the `402 Payment Req
 ## Installation
 
 ```bash
-# Clone usdc-agent
+# Clone lobster-pay
 git clone https://github.com/itsGustav/lobster-pay
-cd usdc-agent
+cd lobster-pay
 
 # Install dependencies
 npm install

@@ -1,7 +1,7 @@
 {
   "name": "lobster-pay",
   "version": "1.0.0",
-  "description": "USDC Agent Skill for Clawdbot - Circle Programmable Wallets integration",
+  "description": "Lobster Pay Skill for Clawdbot - Circle Programmable Wallets integration",
   "main": "lib/circle-client.ts",
   "bin": {
     "lobster-pay": "./scripts/usdc-cli.ts"

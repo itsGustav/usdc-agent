@@ -258,9 +258,9 @@ export class IdentityClient {
 }
 
 /**
- * Create a standard USDC Agent registration file
+ * Create a standard Lobster Pay registration file
  */
-export function createUSDCAgentRegistration(options: {
+export function createLobsterAgentRegistration(options: {
   name: string;
   description: string;
   image?: string;

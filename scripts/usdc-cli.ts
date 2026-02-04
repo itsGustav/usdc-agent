@@ -1,6 +1,6 @@
 #!/usr/bin/env npx ts-node
 /**
- * USDC Agent CLI
+ * Lobster Pay CLI
  * 
  * Command-line interface for USDC operations via Circle Programmable Wallets.
  * 
@@ -420,7 +420,7 @@ Examples:
 
 function showHelp() {
   console.log(`
-USDC Agent CLI - Manage USDC via Circle Programmable Wallets
+Lobster Pay CLI - Manage USDC via Circle Programmable Wallets
 
 Commands:
   balance              Check USDC balance across all wallets

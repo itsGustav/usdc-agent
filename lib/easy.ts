@@ -1,5 +1,5 @@
 /**
- * USDC Agent - Easy Mode
+ * Lobster Pay - Easy Mode
  * 
  * One-liner APIs for the most common operations.
  * Designed for humans AND AI agents to use with minimal setup.
@@ -49,7 +49,7 @@ export interface QuickConfig {
   agentDescription?: string;
 }
 
-export interface USDCAgent {
+export interface LobsterAgent {
   // Core
   circle: CircleClient;
   x402: X402Client;
@@ -85,11 +85,11 @@ export interface AgentStatus {
 }
 
 /**
- * Create a USDC Agent with one function call
+ * Create a Lobster Pay with one function call
  * 
  * @example
  * ```typescript
- * const agent = await createUSDCAgent({
+ * const agent = await createLobsterAgent({
  *   circleApiKey: process.env.CIRCLE_API_KEY!,
  *   circleEntitySecret: process.env.CIRCLE_ENTITY_SECRET!,
  * });
@@ -104,7 +104,7 @@ export interface AgentStatus {
  * const data = await agent.pay('https://api.example.com/premium');
  * ```
  */
-export async function createUSDCAgent(config: QuickConfig): Promise<USDCAgent> {
+export async function createLobsterAgent(config: QuickConfig): Promise<LobsterAgent> {
   const network = config.network || 'testnet';
   const chain = config.chain || (network === 'testnet' ? 'ETH-SEPOLIA' : 'ETH-MAINNET');
   
@@ -160,7 +160,7 @@ export async function createUSDCAgent(config: QuickConfig): Promise<USDCAgent> {
   }
   
   // Build the agent interface
-  const agent: USDCAgent = {
+  const agent: LobsterAgent = {
     circle,
     x402,
     escrow,
@@ -258,7 +258,7 @@ export async function createUSDCAgent(config: QuickConfig): Promise<USDCAgent> {
  * 
  * Just set CIRCLE_API_KEY and CIRCLE_ENTITY_SECRET env vars
  */
-export async function quickStart(): Promise<USDCAgent> {
+export async function quickStart(): Promise<LobsterAgent> {
   const apiKey = process.env.CIRCLE_API_KEY;
   const entitySecret = process.env.CIRCLE_ENTITY_SECRET;
   
@@ -271,7 +271,7 @@ export async function quickStart(): Promise<USDCAgent> {
     );
   }
   
-  return createUSDCAgent({
+  return createLobsterAgent({
     circleApiKey: apiKey,
     circleEntitySecret: entitySecret,
     privateKey: process.env.PRIVATE_KEY,
@@ -325,7 +325,7 @@ export async function runCLI(args: string[]): Promise<void> {
       
     default:
       console.log(`
-USDC Agent CLI
+Lobster Pay CLI
 
 Commands:
   balance              Check your USDC balance
@@ -343,7 +343,7 @@ Environment Variables:
 Get started:
   1. Get credentials at https://console.circle.com
   2. Set environment variables
-  3. Run: npx usdc-agent balance
+  3. Run: npx lobster-pay balance
       `);
   }
 }

@@ -11,7 +11,7 @@ export CIRCLE_ENTITY_SECRET="your-entity-secret"
 
 # 2. Clone and install
 git clone https://github.com/itsGustav/lobster-pay
-cd usdc-agent && npm install
+cd lobster-pay && npm install
 
 # 3. Check your balance
 npm run balance
@@ -37,9 +37,9 @@ await agent.status();            // See trust score
 ## Option 3: Full Control
 
 ```typescript
-import { createUSDCAgent } from './lib/easy';
+import { createLobsterAgent } from './lib/easy';
 
-const agent = await createUSDCAgent({
+const agent = await createLobsterAgent({
   circleApiKey: 'your-api-key',
   circleEntitySecret: 'your-entity-secret',
   

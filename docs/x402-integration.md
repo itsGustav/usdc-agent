@@ -2,7 +2,7 @@
 
 ## Overview
 
-The x402 protocol enables seamless HTTP micropayments using the `402 Payment Required` status code. This integration adds payment-gated HTTP services to usdc-agent, allowing agents to monetize APIs, services, and skills automatically.
+The x402 protocol enables seamless HTTP micropayments using the `402 Payment Required` status code. This integration adds payment-gated HTTP services to lobster-pay, allowing agents to monetize APIs, services, and skills automatically.
 
 ## Architecture
 

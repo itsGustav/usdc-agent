@@ -16,7 +16,7 @@ import {
   AgentRegistration,
   CHAIN_CONFIG,
 } from './constants';
-import { IdentityClient, createUSDCAgentRegistration, RegisteredAgent } from './identity';
+import { IdentityClient, createLobsterAgentRegistration, RegisteredAgent } from './identity';
 import { ReputationClient, FeedbackTemplates, ReputationSummary } from './reputation';
 import { DiscoveryService, DiscoveredAgent } from './discovery';
 
@@ -72,7 +72,7 @@ export class ERC8004Client {
     mcpEndpoint?: string;
     a2aEndpoint?: string;
   }): Promise<number> {
-    const registration = createUSDCAgentRegistration({
+    const registration = createLobsterAgentRegistration({
       name: options.name,
       description: options.description,
       image: options.image,

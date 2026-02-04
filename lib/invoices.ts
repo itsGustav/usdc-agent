@@ -286,7 +286,7 @@ export class InvoiceManager {
    */
   private generateX402PaymentUrl(invoice: Invoice): string {
     // This would point to your x402-enabled invoice payment endpoint
-    const baseUrl = process.env.X402_BASE_URL || 'https://api.usdc-agent.com';
+    const baseUrl = process.env.X402_BASE_URL || 'https://api.lobster-pay.com';
     return `${baseUrl}/invoices/${invoice.id}/pay`;
   }
 
@@ -306,7 +306,7 @@ export class InvoiceManager {
       throw new Error('Invoice not found');
     }
 
-    const baseUrl = options?.baseUrl || process.env.X402_BASE_URL || 'https://api.usdc-agent.com';
+    const baseUrl = options?.baseUrl || process.env.X402_BASE_URL || 'https://api.lobster-pay.com';
     const x402Url = `${baseUrl}/invoices/${invoice.id}/pay`;
 
     invoice.x402PaymentUrl = x402Url;

@@ -4,7 +4,7 @@
 
 ## Overview
 
-USDC Agent integrates with [ERC-8004: Trustless Agents](https://eips.ethereum.org/EIPS/eip-8004) to enable:
+Lobster Pay integrates with [ERC-8004: Trustless Agents](https://eips.ethereum.org/EIPS/eip-8004) to enable:
 
 - **On-chain Agent Identity** — NFT-based identity in the Identity Registry
 - **Reputation System** — Feedback and ratings after transactions
@@ -17,7 +17,7 @@ This creates a trust layer for agent-to-agent commerce, ensuring safe USDC payme
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      USDC Agent Skill                        │
+│                      Lobster Pay Skill                        │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
@@ -68,7 +68,7 @@ const erc8004 = createERC8004Client(
 ```typescript
 // Register with the Identity Registry
 const agentId = await erc8004.registerAgent({
-  name: 'My USDC Agent',
+  name: 'My Lobster Pay',
   description: 'AI agent that accepts USDC payments for data analysis',
   image: 'https://example.com/agent-logo.png',
   capabilities: ['data-analysis', 'report-generation', 'x402-payments'],

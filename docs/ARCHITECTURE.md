@@ -1,4 +1,4 @@
-# USDC Agent Architecture
+# Lobster Pay Architecture
 
 ## System Overview
 
