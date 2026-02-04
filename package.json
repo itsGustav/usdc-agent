@@ -1,10 +1,10 @@
 {
-  "name": "usdc-agent",
+  "name": "lobster-pay",
   "version": "1.0.0",
   "description": "USDC Agent Skill for Clawdbot - Circle Programmable Wallets integration",
   "main": "lib/circle-client.ts",
   "bin": {
-    "usdc-agent": "./scripts/usdc-cli.ts"
+    "lobster-pay": "./scripts/usdc-cli.ts"
   },
   "scripts": {
     "cli": "npx ts-node scripts/usdc-cli.ts",
@@ -42,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/usdc-agent-skill"
+    "url": "https://github.com/openclaw/lobster-pay-skill"
   },
   "engines": {
     "node": ">=22.0.0"

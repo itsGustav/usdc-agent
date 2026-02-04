@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Documentation — USDC Agent</title>
-  <meta name="description" content="Complete documentation for USDC Agent. API reference, guides, and commands for building payment-enabled AI agents.">
+  <title>Documentation — Lobster Pay</title>
+  <meta name="description" content="Complete documentation for Lobster Pay. API reference, guides, and commands for building payment-enabled AI agents.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -417,8 +417,8 @@
     <div class="container">
       <nav>
         <a href="index.html" class="logo">
-          <div class="logo-icon">💰</div>
-          <span>USDC Agent</span>
+          <div class="logo-icon">🦞</div>
+          <span>Lobster Pay</span>
         </a>
         <div class="nav-links">
           <a href="index.html">Home</a>
@@ -487,14 +487,14 @@
       <main class="docs-content">
         <h1>Documentation</h1>
         <p>
-          Complete reference for USDC Agent — the payment infrastructure for AI agents. 
+          Complete reference for Lobster Pay — the payment infrastructure for AI agents. 
           Everything you need to send, receive, and escrow USDC programmatically.
         </p>
         
         <!-- GETTING STARTED -->
         <h2 id="introduction">Introduction</h2>
         <p>
-          USDC Agent provides payment infrastructure for AI agents to transact autonomously. 
+          Lobster Pay provides payment infrastructure for AI agents to transact autonomously. 
           Built on Circle's USDC and the Base network, it enables:
         </p>
         <ul>
@@ -509,13 +509,13 @@
         
         <h3>NPM / Yarn / PNPM</h3>
         <pre><code># npm
-npm install usdc-agent
+npm install lobster-pay
 
 # yarn
-yarn add usdc-agent
+yarn add lobster-pay
 
 # pnpm
-pnpm add usdc-agent</code></pre>
+pnpm add lobster-pay</code></pre>
         
         <h3>Requirements</h3>
         <ul>
@@ -527,7 +527,7 @@ pnpm add usdc-agent</code></pre>
         <h2 id="quick-start">Quick Start</h2>
         
         <h3>Easy Mode (Recommended)</h3>
-        <pre><code>import { createUSDCAgent, quickStart } from 'usdc-agent/easy';
+        <pre><code>import { createLobsterAgent, quickStart } from 'lobster-pay/easy';
 
 // One-line setup
 const agent = await quickStart({
@@ -542,9 +542,9 @@ const balance = await agent.getBalance();
 console.log(`Balance: $${balance}`);</code></pre>
         
         <h3>Full Control</h3>
-        <pre><code>import { USDCAgent } from 'usdc-agent';
+        <pre><code>import { LobsterAgent } from 'lobster-pay';
 
-const agent = new USDCAgent({
+const agent = new LobsterAgent({
   circleApiKey: process.env.CIRCLE_API_KEY,
   network: 'base',
   walletId: 'existing-wallet-id' // optional
@@ -619,7 +619,7 @@ console.log(`Tx: ${tx.hash}`);</code></pre>
         <!-- CORE CONCEPTS -->
         <h2 id="wallets">Wallets</h2>
         <p>
-          USDC Agent supports two wallet modes:
+          Lobster Pay supports two wallet modes:
         </p>
         
         <h3>Circle Wallets (Recommended)</h3>
@@ -634,7 +634,7 @@ console.log(info.balance);</code></pre>
         
         <h3>External Wallets</h3>
         <p>Use your own private key for direct blockchain access.</p>
-        <pre><code>const agent = new USDCAgent({
+        <pre><code>const agent = new LobsterAgent({
   circleApiKey: process.env.CIRCLE_API_KEY,
   privateKey: process.env.PRIVATE_KEY,
   network: 'base'
@@ -954,7 +954,7 @@ await agent.releaseEscrow('escrow-id', { amount: '500.00' });</code></pre>
         <!-- AGENT-TO-AGENT -->
         <h2 id="a2a-overview">Agent-to-Agent Overview</h2>
         <p>
-          USDC Agent enables fully autonomous agent-to-agent transactions. Agents can discover 
+          Lobster Pay enables fully autonomous agent-to-agent transactions. Agents can discover 
           each other, negotiate prices, transact, and rate each other — all without human intervention.
         </p>
         
@@ -1144,14 +1144,14 @@ agent.setWebhook({
         
         <h2 id="error-handling">Error Handling</h2>
         <p>
-          USDC Agent throws typed errors for common failure cases.
+          Lobster Pay throws typed errors for common failure cases.
         </p>
         
         <pre><code>import { 
   InsufficientFundsError,
   TransferFailedError,
   TrustScoreTooLowError 
-} from 'usdc-agent';
+} from 'lobster-pay';
 
 try {
   await agent.transfer({ to: '0x...', amount: '1000.00' });
@@ -1216,7 +1216,7 @@ try {
   <footer>
     <div class="container footer-inner">
       <div style="color: var(--gray-500); font-size: 0.875rem;">
-        © 2026 USDC Agent
+        © 2026 Lobster Pay
       </div>
       <div class="footer-links">
         <a href="index.html">Home</a>

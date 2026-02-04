@@ -1,8 +1,8 @@
-# 🚀 USDC Agent Launch Plan
+# 🚀 Lobster Pay Launch Plan
 
 ## Product Summary
 
-**USDC Agent** is the complete payment infrastructure for AI agents — enabling autonomous machines to send, receive, and escrow USDC with built-in trust verification.
+**Lobster Pay** is the complete payment infrastructure for AI agents — enabling autonomous machines to send, receive, and escrow USDC with built-in trust verification.
 
 **Tagline:** *"Payment rails for the agentic economy"*
 
@@ -65,7 +65,7 @@
 
 ## Key Differentiators
 
-| Feature | USDC Agent | Competitors |
+| Feature | Lobster Pay | Competitors |
 |---------|------------|-------------|
 | ERC-8004 Trust Layer | ✅ First | ❌ None |
 | x402 Protocol | ✅ Native | ❌ Manual |
@@ -81,7 +81,7 @@
 > "The payment stack for AI agents. Send USDC. Verify trust. Build economies."
 
 ### Elevator Pitch (30 sec)
-> "USDC Agent lets AI agents pay each other trustlessly. Built on Circle for USDC payments, x402 for HTTP-native micropayments, and ERC-8004 for on-chain reputation. One line of code to get started. Already supports escrow, invoicing, and multi-chain."
+> "Lobster Pay lets AI agents pay each other trustlessly. Built on Circle for USDC payments, x402 for HTTP-native micropayments, and ERC-8004 for on-chain reputation. One line of code to get started. Already supports escrow, invoicing, and multi-chain."
 
 ### Technical Pitch (for devs)
 > "It's Stripe for AI agents. Drop in our SDK, and your agent can send/receive USDC, handle 402 Payment Required responses automatically, verify counterparty trust via on-chain reputation, and create escrows with pre-built templates. All on testnet today, mainnet ready."
@@ -100,7 +100,7 @@
 ### Week 2 (Education)
 - **Mon:** "How x402 Works" blog post
 - **Wed:** "ERC-8004 for AI Agents" explainer
-- **Fri:** "Building Escrow with USDC Agent" tutorial
+- **Fri:** "Building Escrow with Lobster Pay" tutorial
 
 ### Week 3 (Community)
 - **Mon:** Discord AMA

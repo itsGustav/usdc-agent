@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>USDC Agent – Payment Infrastructure for AI Agents</title>
+  <title>Lobster Pay 🦞 Payment Infrastructure for AI Agents</title>
   <meta name="description" content="The complete payment stack for AI agents. Send, receive, and escrow USDC with built-in trust verification.">
   
   <!-- Fonts -->
@@ -1944,8 +1944,8 @@
     <div class="container">
       <nav>
         <a href="#" class="logo">
-          <div class="logo-icon">💰</div>
-          USDC Agent
+          <div class="logo-icon">🦞</div>
+          Lobster Pay
         </a>
         <div class="nav-links">
           <a href="#features">Features</a>
@@ -1998,7 +1998,7 @@
           </div>
           <div class="code-content">
             <span class="code-comment">// Get started in 3 lines</span><br>
-            <span class="code-keyword">const</span> <span class="code-variable">agent</span> = <span class="code-keyword">await</span> <span class="code-function">createUSDCAgent</span>(config);<br><br>
+            <span class="code-keyword">const</span> <span class="code-variable">agent</span> = <span class="code-keyword">await</span> <span class="code-function">createLobsterAgent</span>(config);<br><br>
             <span class="code-keyword">await</span> agent.<span class="code-function">send</span>(<span class="code-string">'0x...'</span>, <span class="code-string">'100'</span>); <span class="code-comment">// Send USDC</span><br>
             <span class="code-keyword">await</span> agent.<span class="code-function">pay</span>(<span class="code-string">'https://api.example.com'</span>); <span class="code-comment">// Pay for API</span>
           </div>
@@ -2025,7 +2025,7 @@
   <section class="value-props" id="features">
     <div class="container">
       <div class="section-header">
-        <span class="section-label">Why USDC Agent</span>
+        <span class="section-label">Why Lobster Pay</span>
         <h2 class="section-title">Everything agents need to transact</h2>
         <p class="section-subtitle">Three powerful layers that work together to enable trustless agent-to-agent commerce.</p>
       </div>
@@ -2253,7 +2253,7 @@
       <div class="section-header">
         <span class="section-label">Get Started</span>
         <h2 class="section-title">Up and running in minutes</h2>
-        <p class="section-subtitle">Choose your path based on how you'll use USDC Agent.</p>
+        <p class="section-subtitle">Choose your path based on how you'll use Lobster Pay.</p>
       </div>
       
       <div class="tabs-container">
@@ -2298,13 +2298,13 @@
 <span class="code-keyword">export</span> CIRCLE_ENTITY_SECRET=<span class="code-string">"your-secret"</span>
 
 <span class="code-comment"># Check balance</span>
-npx usdc-agent balance
+npx lobster-pay balance
 
 <span class="code-comment"># Send USDC</span>
-npx usdc-agent send 0x... 100
+npx lobster-pay send 0x... 100
 
 <span class="code-comment"># View status</span>
-npx usdc-agent status</code></pre>
+npx lobster-pay status</code></pre>
             </div>
           </div>
         </div>
@@ -2323,7 +2323,7 @@ npx usdc-agent status</code></pre>
                 <div class="step-number">2</div>
                 <div class="step-content">
                   <h4>Initialize Your Agent</h4>
-                  <p>Create a USDC Agent with one function call. Optionally register for on-chain identity.</p>
+                  <p>Create a Lobster Pay with one function call. Optionally register for on-chain identity.</p>
                 </div>
               </div>
               <div class="setup-step">
@@ -2339,9 +2339,9 @@ npx usdc-agent status</code></pre>
                 <span class="code-block-title">agent.ts</span>
                 <button class="code-block-copy">Copy</button>
               </div>
-              <pre><code><span class="code-keyword">import</span> { createUSDCAgent } <span class="code-keyword">from</span> <span class="code-string">'./lib/easy'</span>;
+              <pre><code><span class="code-keyword">import</span> { createLobsterAgent } <span class="code-keyword">from</span> <span class="code-string">'./lib/easy'</span>;
 
-<span class="code-keyword">const</span> agent = <span class="code-keyword">await</span> <span class="code-function">createUSDCAgent</span>({
+<span class="code-keyword">const</span> agent = <span class="code-keyword">await</span> <span class="code-function">createLobsterAgent</span>({
   circleApiKey: process.env.CIRCLE_API_KEY,
   circleEntitySecret: process.env.CIRCLE_ENTITY_SECRET,
   privateKey: process.env.PRIVATE_KEY, <span class="code-comment">// Optional: ERC-8004</span>
@@ -2474,7 +2474,7 @@ npx usdc-agent status</code></pre>
           <div class="feature-icon">🔐</div>
           <div class="feature-content">
             <h3>x402 Payment Protocol</h3>
-            <p>When Agent A calls Agent B's API and gets a 402 Payment Required response, USDC Agent automatically parses the payment request, sends the USDC, and retries with proof of payment. No invoices, no manual steps, no waiting.</p>
+            <p>When Agent A calls Agent B's API and gets a 402 Payment Required response, Lobster Pay automatically parses the payment request, sends the USDC, and retries with proof of payment. No invoices, no manual steps, no waiting.</p>
             <a href="./x402-integration.md" class="feature-link">Learn about x402 →</a>
           </div>
         </div>
@@ -2708,7 +2708,7 @@ npx usdc-agent status</code></pre>
     <div class="container">
       <div class="cta-content">
         <h2>Ready to build the future?</h2>
-        <p>Join the agents already transacting on USDC Agent.</p>
+        <p>Join the agents already transacting on Lobster Pay.</p>
         <div class="cta-buttons">
           <a href="https://github.com/itsGustav/usdc-agent" class="btn btn-primary btn-large">Get Started →</a>
           <a href="documentation.html" class="btn btn-secondary btn-large">Read the Docs</a>

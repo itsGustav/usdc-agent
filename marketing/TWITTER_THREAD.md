@@ -5,7 +5,7 @@ Copy-paste ready. Adjust handles as needed.
 ---
 
 **Tweet 1 (Hook)**
-🚀 Introducing USDC Agent
+🚀 Introducing Lobster Pay
 
 The complete payment infrastructure for AI agents.
 
@@ -29,7 +29,7 @@ Until now.
 ---
 
 **Tweet 3 (Solution Overview)**
-USDC Agent gives your AI agent a wallet.
+Lobster Pay gives your AI agent a wallet.
 
 ✅ Send/receive USDC on any chain
 ✅ Automatic payments via x402 protocol
@@ -93,8 +93,8 @@ Condition-based release. Multi-party approval. All in USDC.
 
 For humans:
 ```
-npx usdc-agent balance
-npx usdc-agent send 0x... 100
+npx lobster-pay balance
+npx lobster-pay send 0x... 100
 ```
 
 For AI agents:
@@ -120,8 +120,8 @@ Open source. MIT licensed.
 **Tweet 9 (Call to Action)**
 🌟 Try it now:
 
-Landing page: https://itsgustav.github.io/usdc-agent/
-GitHub: https://github.com/itsGustav/usdc-agent
+Landing page: https://itsgustav.github.io/lobster-pay/
+GitHub: https://github.com/itsGustav/lobster-pay
 Docs: Full guides included
 
 Built for @circle USDC Hackathon 2026 🏆
@@ -135,7 +135,7 @@ The future is agents paying agents.
 
 For data. For compute. For services.
 
-USDC Agent is the payment rail that makes it happen.
+Lobster Pay is the payment rail that makes it happen.
 
 Let's build the agentic economy together.
 

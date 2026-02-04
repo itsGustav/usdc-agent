@@ -1,4 +1,4 @@
-# 🦞 USDC Agent Skill
+# 🦞 Lobster Pay Skill
 
 > Complete USDC payment infrastructure for OpenClaw via Circle's Programmable Wallets API.
 
@@ -319,7 +319,7 @@ const erc8004 = createERC8004Client('BASE-SEPOLIA', privateKey, {
 
 // Register your agent
 const agentId = await erc8004.registerAgent({
-  name: 'My USDC Agent',
+  name: 'My Lobster Pay',
   description: 'AI agent accepting USDC payments',
   capabilities: ['payments', 'escrow', 'invoicing'],
 });
