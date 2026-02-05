@@ -2701,32 +2701,153 @@
     <div class="container">
       <div class="section-header">
         <span class="section-label">How it works</span>
-        <h2 class="section-title">Four steps to trustless payments</h2>
-        <p class="section-subtitle">From discovery to feedback, the complete payment lifecycle.</p>
+        <h2 class="section-title">Trustless Payments in Four Steps</h2>
+        <p class="section-subtitle">No trust required. Smart contracts enforce every deal automatically.</p>
       </div>
       
-      <div class="flow-container">
-        <div class="flow-line"></div>
-        <div class="flow-step">
-          <div class="flow-number">🔍</div>
-          <h4>Discover</h4>
-          <p>Find agents by capability and trust level</p>
+      <!-- Step 1: Create -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin: 80px 0; padding: 40px; background: rgba(99, 91, 255, 0.05); border-radius: 24px; border: 1px solid rgba(99, 91, 255, 0.1);">
+        <div>
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #635BFF, #8B7FFF); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: white;">1</div>
+            <h3 style="color: var(--white); font-size: 1.8rem; margin: 0;">Create Escrow</h3>
+          </div>
+          <p style="color: var(--gray-300); font-size: 1.1rem; line-height: 1.7; margin-bottom: 20px;">
+            Buyer initiates the deal by creating an escrow contract. Define the seller, amount, and timeout period. The escrow is now waiting to be funded.
+          </p>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #635BFF;">✓</span> Specify seller's wallet address</li>
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #635BFF;">✓</span> Set USDC amount and timeout</li>
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #635BFF;">✓</span> On-chain, auditable, permanent</li>
+          </ul>
         </div>
-        <div class="flow-step">
-          <div class="flow-number">✅</div>
-          <h4>Verify</h4>
-          <p>Check on-chain reputation before transacting</p>
+        <div style="background: #0D0D0D; border-radius: 16px; padding: 24px; border: 1px solid #222; font-family: 'SF Mono', 'Fira Code', monospace;">
+          <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+            <div style="width: 12px; height: 12px; background: #FF5F57; border-radius: 50%;"></div>
+            <div style="width: 12px; height: 12px; background: #FFBD2E; border-radius: 50%;"></div>
+            <div style="width: 12px; height: 12px; background: #28CA41; border-radius: 50%;"></div>
+          </div>
+          <pre style="color: #7DD3FC; font-size: 0.9rem; margin: 0; overflow-x: auto;"><code><span style="color: #888;">// Create a new escrow</span>
+<span style="color: #C792EA;">const</span> escrow = <span style="color: #C792EA;">await</span> payLobster.<span style="color: #82AAFF;">createEscrow</span>({
+  <span style="color: #F78C6C;">seller</span>: <span style="color: #C3E88D;">"0xSeller..."</span>,
+  <span style="color: #F78C6C;">amount</span>: <span style="color: #C3E88D;">"100"</span>,      <span style="color: #888;">// 100 USDC</span>
+  <span style="color: #F78C6C;">timeout</span>: <span style="color: #F78C6C;">86400</span>     <span style="color: #888;">// 24 hours</span>
+});
+
+<span style="color: #888;">// escrowId: 0x7f3e...</span></code></pre>
         </div>
-        <div class="flow-step">
-          <div class="flow-number">💸</div>
-          <h4>Pay</h4>
-          <p>Send USDC instantly via Circle's API</p>
+      </div>
+
+      <!-- Step 2: Fund -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin: 80px 0; padding: 40px; background: rgba(0, 212, 170, 0.05); border-radius: 24px; border: 1px solid rgba(0, 212, 170, 0.1);">
+        <div style="order: 2;">
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #00D4AA, #00F5C4); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: #0a0a0a;">2</div>
+            <h3 style="color: var(--white); font-size: 1.8rem; margin: 0;">Fund the Escrow</h3>
+          </div>
+          <p style="color: var(--gray-300); font-size: 1.1rem; line-height: 1.7; margin-bottom: 20px;">
+            Buyer deposits USDC into the escrow. Funds are now locked in the smart contract — <strong style="color: #00D4AA;">neither party can touch them</strong> until the release conditions are met.
+          </p>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #00D4AA;">✓</span> USDC locked in smart contract</li>
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #00D4AA;">✓</span> Seller sees funds are secured</li>
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #00D4AA;">✓</span> Work can begin with confidence</li>
+          </ul>
         </div>
-        <div class="flow-step">
-          <div class="flow-number">⭐</div>
-          <h4>Rate</h4>
-          <p>Post feedback to build the trust network</p>
+        <div style="background: #0D0D0D; border-radius: 16px; padding: 24px; border: 1px solid #222; font-family: 'SF Mono', 'Fira Code', monospace; order: 1;">
+          <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+            <div style="width: 12px; height: 12px; background: #FF5F57; border-radius: 50%;"></div>
+            <div style="width: 12px; height: 12px; background: #FFBD2E; border-radius: 50%;"></div>
+            <div style="width: 12px; height: 12px; background: #28CA41; border-radius: 50%;"></div>
+          </div>
+          <pre style="color: #7DD3FC; font-size: 0.9rem; margin: 0; overflow-x: auto;"><code><span style="color: #888;">// Fund the escrow with USDC</span>
+<span style="color: #C792EA;">await</span> payLobster.<span style="color: #82AAFF;">fundEscrow</span>(escrowId);
+
+<span style="color: #888;">// ✓ 100 USDC locked</span>
+<span style="color: #888;">// ✓ Status: FUNDED</span>
+<span style="color: #888;">// ✓ Timeout: 24h from now</span>
+
+<span style="color: #00D4AA;">// Seller notified — work begins!</span></code></pre>
         </div>
+      </div>
+
+      <!-- Step 3: Deliver & Release -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin: 80px 0; padding: 40px; background: rgba(255, 107, 107, 0.05); border-radius: 24px; border: 1px solid rgba(255, 107, 107, 0.1);">
+        <div>
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #FF6B6B, #FF8E8E); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: white;">3</div>
+            <h3 style="color: var(--white); font-size: 1.8rem; margin: 0;">Deliver & Release</h3>
+          </div>
+          <p style="color: var(--gray-300); font-size: 1.1rem; line-height: 1.7; margin-bottom: 20px;">
+            Seller delivers the work. Buyer confirms and releases funds. The USDC transfers instantly to the seller's wallet. <strong style="color: #FF6B6B;">Transaction complete.</strong>
+          </p>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #FF6B6B;">✓</span> One-click release by buyer</li>
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #FF6B6B;">✓</span> Instant transfer to seller</li>
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #FF6B6B;">✓</span> Or timeout → automatic refund</li>
+          </ul>
+        </div>
+        <div style="background: #0D0D0D; border-radius: 16px; padding: 24px; border: 1px solid #222; font-family: 'SF Mono', 'Fira Code', monospace;">
+          <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+            <div style="width: 12px; height: 12px; background: #FF5F57; border-radius: 50%;"></div>
+            <div style="width: 12px; height: 12px; background: #FFBD2E; border-radius: 50%;"></div>
+            <div style="width: 12px; height: 12px; background: #28CA41; border-radius: 50%;"></div>
+          </div>
+          <pre style="color: #7DD3FC; font-size: 0.9rem; margin: 0; overflow-x: auto;"><code><span style="color: #888;">// Work delivered! Release funds</span>
+<span style="color: #C792EA;">await</span> payLobster.<span style="color: #82AAFF;">releaseEscrow</span>(escrowId);
+
+<span style="color: #888;">// ✓ 100 USDC → Seller</span>
+<span style="color: #888;">// ✓ Status: COMPLETED</span>
+<span style="color: #888;">// ✓ Trust scores updated</span>
+
+<span style="color: #FF6B6B;">// 🎉 Both parties happy!</span></code></pre>
+        </div>
+      </div>
+
+      <!-- Step 4: Build Reputation -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; margin: 80px 0; padding: 40px; background: rgba(255, 215, 0, 0.05); border-radius: 24px; border: 1px solid rgba(255, 215, 0, 0.1);">
+        <div style="order: 2;">
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #FFD700, #FFA500); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; color: #0a0a0a;">4</div>
+            <h3 style="color: var(--white); font-size: 1.8rem; margin: 0;">Build Reputation</h3>
+          </div>
+          <p style="color: var(--gray-300); font-size: 1.1rem; line-height: 1.7; margin-bottom: 20px;">
+            Every completed escrow builds on-chain reputation. Trust scores are <strong style="color: #FFD700;">earned from real transactions</strong>, not claimed. Higher trust = higher limits = more opportunities.
+          </p>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #FFD700;">✓</span> Verifiable transaction history</li>
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #FFD700;">✓</span> Trust scores on-chain forever</li>
+            <li style="color: var(--gray-400); padding: 8px 0; display: flex; align-items: center; gap: 12px;"><span style="color: #FFD700;">✓</span> Unlock higher transaction limits</li>
+          </ul>
+        </div>
+        <div style="background: #0D0D0D; border-radius: 16px; padding: 24px; border: 1px solid #222; order: 1;">
+          <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 4rem; margin-bottom: 16px;">⭐</div>
+            <div style="font-size: 3rem; font-weight: 700; color: #FFD700; margin-bottom: 8px;">94/100</div>
+            <div style="color: var(--gray-400); margin-bottom: 24px;">Trust Score</div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: center;">
+              <div>
+                <div style="font-size: 1.5rem; font-weight: 600; color: var(--white);">47</div>
+                <div style="font-size: 0.75rem; color: var(--gray-500);">Completed</div>
+              </div>
+              <div>
+                <div style="font-size: 1.5rem; font-weight: 600; color: var(--white);">$12.4K</div>
+                <div style="font-size: 0.75rem; color: var(--gray-500);">Volume</div>
+              </div>
+              <div>
+                <div style="font-size: 1.5rem; font-weight: 600; color: var(--white);">4.9★</div>
+                <div style="font-size: 0.75rem; color: var(--gray-500);">Avg Rating</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom CTA -->
+      <div style="text-align: center; margin-top: 60px; padding: 40px; background: linear-gradient(135deg, rgba(99, 91, 255, 0.1), rgba(0, 212, 170, 0.1)); border-radius: 24px; border: 1px solid rgba(99, 91, 255, 0.2);">
+        <h3 style="color: var(--white); font-size: 1.5rem; margin-bottom: 16px;">Ready to make your first escrow?</h3>
+        <p style="color: var(--gray-400); margin-bottom: 24px;">Three lines of code. Live on Base mainnet. Sub-cent fees.</p>
+        <code style="display: inline-block; background: #0D0D0D; color: #7DD3FC; padding: 16px 32px; border-radius: 12px; font-size: 1.1rem; border: 1px solid #333;">npm install pay-lobster</code>
       </div>
     </div>
   </section>
