@@ -1,235 +1,324 @@
-# Pay Lobster Skill
+# Pay Lobster - USDC Payment Skill 🦞
 
-Enable Clawdbot to interact with USDC on blockchain networks via Circle's Programmable Wallets API.
+**Status**: ✅ **FULLY LIVE** - Real smart contracts on Base mainnet
 
-## Overview
+**Version**: 1.1.0  
+**npm**: `pay-lobster@1.1.0`  
+**Website**: [paylobster.com](https://paylobster.com)
 
-This skill allows your Clawdbot to:
-- 💰 **Check USDC balances** across multiple chains
-- 📤 **Send USDC** to any address
-- 📥 **Receive USDC** with generated addresses
-- 🌉 **Cross-chain transfers** via Circle's CCTP
-- 🤖 **Agent-to-agent payments** for autonomous commerce
+---
 
-**Built for the Circle USDC Hackathon 2026** 🏆
+## Smart Contracts (Base Mainnet)
 
-## Requirements
+| Contract | Address | Purpose |
+|----------|---------|---------|
+| **PayLobsterEscrow** | `0xa091fC821c85Dfd2b2B3EF9e22c5f4c8B8A24525` | Trustless USDC escrow |
+| **PayLobsterRegistry** | `0x10BCa62Ce136A70F914c56D97e491a85d1e050E7` | Agent identity & trust |
+| **USDC** | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` | Circle USDC token |
 
-### 1. Circle Developer Account
-Sign up at: https://console.circle.com
+**Network**: Base Mainnet (Chain ID: 8453)  
+**RPC**: https://mainnet.base.org
 
-### 2. API Key
-Create in Console: Keys → Create a key → API key → Standard Key
+---
 
-### 3. Entity Secret
-Register your entity secret for transaction signing.
+## ⚙️ Configuration
 
-## Configuration
+To enable autonomous payments, set the private key:
 
-Add to your Clawdbot config (`~/.clawdbot/clawdbot.json`):
-
-```json
-{
-  "skills": {
-    "entries": {
-      "lobster-pay": {
-        "apiKey": "YOUR_CIRCLE_API_KEY",
-        "entitySecret": "YOUR_ENTITY_SECRET",
-        "network": "testnet"
-      }
-    }
-  }
-}
+```bash
+export PAYLOBSTER_PRIVATE_KEY="0x..."
 ```
 
-Or set environment variables:
-- `CIRCLE_API_KEY`
-- `CIRCLE_ENTITY_SECRET`
+**Security Notes:**
+- Keep private key secure — anyone with it can spend funds
+- Use a dedicated hot wallet with limited funds
+- Never commit private keys to git
 
-## Supported Networks (Testnet)
+---
 
-| Chain | Network ID | USDC Contract |
-|-------|------------|---------------|
-| Ethereum Sepolia | ETH-SEPOLIA | Native USDC |
-| Polygon Amoy | MATIC-AMOY | Native USDC |
-| Avalanche Fuji | AVAX-FUJI | Native USDC |
-| Arbitrum Sepolia | ARB-SEPOLIA | Native USDC |
+## 💰 Wallet Commands
 
-## Usage
-
-### Check Balance
-
+### `paylobster balance`
+Check real USDC & ETH balance from blockchain.
 ```
-User: Check my USDC balance
-Agent: Your USDC balance across all wallets:
-       - Ethereum Sepolia: 100.00 USDC
-       - Polygon Amoy: 50.00 USDC
-       Total: 150.00 USDC
+🦞 Pay Lobster Balance
+
+Wallet: 0xf775...8b7B
+Network: Base Mainnet
+
+💰 USDC: $42.50
+⟠ ETH:  0.057026 (for gas)
 ```
 
-### Send USDC
-
+### `paylobster wallet` / `paylobster receive`
+Show wallet address for deposits.
 ```
-User: Send 10 USDC to 0x1234...abcd on Polygon
-Agent: ✅ Transaction submitted!
-       Amount: 10.00 USDC
-       To: 0x1234...abcd
-       Network: Polygon Amoy
-       TX Hash: 0xabc123...
-       Status: Confirmed
-```
+🦞 Pay Lobster Wallet
 
-### Get Receive Address
+Address: 0xf775f0224A680E2915a066e53A389d0335318b7B
+Network: Base Mainnet
 
-```
-User: Give me an address to receive USDC
-Agent: Send USDC to this address:
-       0x9876...wxyz (Ethereum Sepolia)
-       
-       Supported networks: ETH, MATIC, AVAX, ARB
+Send USDC to this address on Base.
 ```
 
-### Cross-Chain Transfer (CCTP)
-
+### `paylobster history`
+Query recent USDC transfers from blockchain.
 ```
-User: Bridge 25 USDC from Ethereum to Polygon
-Agent: 🌉 Cross-chain transfer initiated via CCTP
-       From: Ethereum Sepolia
-       To: Polygon Amoy
-       Amount: 25.00 USDC
-       Est. time: ~15 minutes
-```
+🦞 Recent Transactions
 
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `usdc balance` | Check USDC balance across all wallets |
-| `usdc send <amount> to <address>` | Send USDC |
-| `usdc receive` | Get deposit address |
-| `usdc bridge <amount> from <chain> to <chain>` | Cross-chain transfer |
-| `usdc history` | Recent transactions |
-| `usdc wallets` | List all managed wallets |
-
-## Triggers
-
-The skill activates on phrases like:
-- "Check my USDC balance"
-- "Send USDC..."
-- "Transfer USDC..."
-- "Bridge USDC..."
-- "What's my wallet address?"
-- "USDC balance"
-
-## Security
-
-⚠️ **TESTNET ONLY** — This skill is configured for testnet by default.
-
-- Never use mainnet credentials in automated agents
-- API keys should have minimal required permissions
-- Entity secrets must be kept secure
-- All transactions require proper authentication
-
-## Architecture
-
-```
-┌─────────────────────────────────────────┐
-│           Clawdbot Agent                │
-│  (Claude/GPT interpreting user intent)  │
-└─────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────┐
-│          Pay Lobster Skill               │
-│   - Balance queries                     │
-│   - Transaction creation                │
-│   - Wallet management                   │
-│   - CCTP bridge calls                   │
-└─────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────┐
-│     Circle Programmable Wallets API     │
-│   - Developer-controlled wallets        │
-│   - Transaction signing                 │
-│   - Multi-chain support                 │
-└─────────────────────────────────────────┘
-                    │
-                    ▼
-┌─────────────────────────────────────────┐
-│           Blockchain Networks           │
-│   ETH | MATIC | AVAX | ARB (testnet)    │
-└─────────────────────────────────────────┘
+1. -$10.00 → 0x742d...bEb (2h ago)
+2. +$25.00 ← 0x891a...cDf (1d ago)
+3. -$5.00 → 0x123...456 (2d ago)
 ```
 
-## API Reference
+---
 
-### CircleClient
+## 💸 Payment Commands
+
+### `paylobster send $X to <address>` ✅ REAL
+Signs and broadcasts USDC transfer on-chain.
+```
+🦞 Sending $10 USDC...
+
+📤 Transaction: 0x7f3a...8c2d
+✅ Confirmed in block 12345678
+
+View: basescan.org/tx/0x7f3a...8c2d
+```
+
+### `paylobster tip $X @agent` ✅ REAL
+Tip another agent with real on-chain transfer.
+```
+🦞 Tip Sent!
+
+Amount: $5 USDC
+To: @agent (0x...)
+
+📤 tx: 0x7f3a...8c2d
+✅ Confirmed!
+```
+
+### `paylobster gas`
+Check current Base gas prices.
+```
+🦞 Base Gas Prices
+
+⚡ Low: 0.001 gwei (~$0.001)
+🚗 Medium: 0.002 gwei (~$0.002)
+🚀 High: 0.005 gwei (~$0.005)
+
+Base L2 = cheap gas 💪
+```
+
+---
+
+## 🔒 Escrow Commands (On-Chain)
+
+All escrow operations use the PayLobsterEscrow smart contract.
+
+### `paylobster escrow $X @seller "description"` ✅ REAL
+Creates escrow on-chain, locks USDC in contract.
+```
+🦞 Escrow Created
+
+ID: 0
+Amount: $100 USDC
+Seller: 0x...
+Description: "Website delivery"
+
+Funds locked in contract until release.
+```
+
+### `paylobster release <id>` ✅ REAL
+Releases escrow funds to seller (buyer only).
+```
+🦞 Escrow Released!
+
+ID: 0
+Amount: $100 USDC sent to seller
+tx: 0x...
+```
+
+### `paylobster refund <id>` ✅ REAL
+Refunds escrow to buyer (seller only, or buyer after deadline).
+```
+🦞 Escrow Refunded!
+
+ID: 0
+Amount: $100 USDC returned to buyer
+tx: 0x...
+```
+
+### `paylobster dispute <id>` ✅ REAL
+Flags escrow for arbitration.
+```
+🦞 Escrow Disputed
+
+ID: 0 is now in dispute.
+Arbiter will review and resolve.
+```
+
+---
+
+## ⭐ Trust & Registry Commands (On-Chain)
+
+All registry operations use the PayLobsterRegistry smart contract.
+
+### `paylobster register "name" capabilities` ✅ REAL
+Register agent identity on-chain.
+```
+🦞 Agent Registered!
+
+Name: MyAgent
+Capabilities: payments,escrow,code-review
+Address: 0x...
+
+Your on-chain identity is live!
+```
+
+### `paylobster trust <address>` ✅ REAL
+Query agent trust score from on-chain ratings.
+```
+🦞 Trust Score: 0x...
+
+Score: 85/100
+Level: Trusted
+Ratings: 12
+```
+
+### `paylobster rate <address> <1-5> "comment"` ✅ REAL
+Rate an agent (stored on-chain forever).
+```
+🦞 Rating Submitted!
+
+Agent: 0x...
+Rating: ⭐⭐⭐⭐⭐ (5/5)
+Comment: "Excellent service!"
+
+tx: 0x...
+```
+
+### `paylobster discover` ✅ REAL
+Find registered agents from on-chain registry.
+```
+🦞 Registered Agents
+
+1. PayLobster (100/100) — payments,escrow
+2. CodeReviewer (92/100) — code-review,audit
+3. DataBot (78/100) — analysis,reports
+
+Query: registry.discoverAgents()
+```
+
+---
+
+## 🔄 Self-Update Command
+
+### `paylobster update`
+Updates Pay Lobster to the latest version.
+```
+🦞 Pay Lobster Self-Update
+
+Current: 1.1.0
+Latest:  1.2.0
+
+📦 Updating npm package...
+📥 Fetching latest skill file...
+
+✅ Pay Lobster updated to v1.2.0!
+```
+
+**What it updates:**
+- npm package (`pay-lobster@latest`)
+- Skill file (SKILL.md)
+- Contract addresses (if changed)
+
+**Run manually:**
+```bash
+~/clawd/skills/pay-lobster/scripts/update.sh
+```
+
+---
+
+## 📊 Analytics Commands
+
+### `paylobster stats`
+Spending summary.
+```
+🦞 Your Stats
+
+This Month:
+• Sent: $245.00
+• Received: $180.00
+• Net: -$65.00
+
+All Time:
+• Total volume: $2,450.00
+• Transactions: 47
+```
+
+---
+
+## 🔧 SDK Usage
 
 ```typescript
-import { CircleClient } from './lib/circle-client';
+import { LobsterAgent } from 'pay-lobster';
 
-const client = new CircleClient({
-  apiKey: process.env.CIRCLE_API_KEY,
-  entitySecret: process.env.CIRCLE_ENTITY_SECRET,
+const agent = new LobsterAgent({
+  privateKey: process.env.PAYLOBSTER_PRIVATE_KEY,
+  network: 'base'
 });
 
-// Get balance
-const balance = await client.getBalance(walletId);
+await agent.initialize();
 
-// Send USDC
-const tx = await client.sendUSDC({
-  fromWalletId: 'wallet-123',
-  toAddress: '0x...',
-  amount: '10.00',
-  chain: 'MATIC-AMOY',
+// Check balance
+const balance = await agent.getBalance();
+
+// Send USDC (REAL!)
+const tx = await agent.send('0x...', '10');
+
+// Create escrow (REAL!)
+const escrow = await agent.createEscrow({
+  amount: '100',
+  recipient: '0x...',
+  conditions: { description: 'Website delivery' }
 });
 
-// Bridge via CCTP
-const bridge = await client.bridgeUSDC({
-  fromChain: 'ETH-SEPOLIA',
-  toChain: 'MATIC-AMOY',
-  amount: '25.00',
+// Release escrow
+await agent.releaseEscrow('0');
+
+// Register agent
+await agent.registerAgent({
+  name: 'MyAgent',
+  capabilities: ['payments', 'escrow']
 });
+
+// Rate agent
+await agent.rateAgent({
+  agent: '0x...',
+  rating: 5,
+  comment: 'Excellent!'
+});
+
+// Get trust score
+const trust = await agent.getTrustScore('0x...');
+
+// Discover agents
+const agents = await agent.discoverAgents({ limit: 10 });
 ```
 
-## Testnet Faucets
+---
 
-Get testnet USDC from Circle's Developer Console:
-https://console.circle.com/faucets
+## 📝 Notes
 
-Or use the CLI:
-```bash
-npx lobster-pay faucet --chain ETH-SEPOLIA --amount 100
-```
+- All transactions are **REAL** on Base mainnet
+- Escrow funds are locked in smart contracts
+- Ratings are stored on-chain permanently
+- Trust scores calculated from on-chain ratings
+- Gas fees are ~$0.001-0.01 per transaction
 
-## Error Handling
+**Contract Links:**
+- [Escrow on BaseScan](https://basescan.org/address/0xa091fC821c85Dfd2b2B3EF9e22c5f4c8B8A24525)
+- [Registry on BaseScan](https://basescan.org/address/0x10BCa62Ce136A70F914c56D97e491a85d1e050E7)
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `INSUFFICIENT_BALANCE` | Not enough USDC | Top up via faucet |
-| `INVALID_ADDRESS` | Bad destination | Verify address format |
-| `RATE_LIMITED` | Too many requests | Wait and retry |
-| `AUTH_FAILED` | Bad API key | Check credentials |
-
-## Hackathon Submission
-
-**Track:** Best OpenClaw Skill
-**Prize:** $10,000 USDC
-
-This skill demonstrates:
-1. ✅ Novel OpenClaw skill for USDC interaction
-2. ✅ Circle Programmable Wallets integration
-3. ✅ Testnet-safe operation
-4. ✅ Real utility for Clawdbot operators
-
-## Resources
-
-- [Circle Developer Docs](https://developers.circle.com)
-- [Programmable Wallets API](https://developers.circle.com/wallets)
-- [CCTP Documentation](https://developers.circle.com/stablecoins/cctp)
-- [Clawdbot Skills Guide](https://docs.clawd.bot/skills)
-
-## License
-
-MIT — Built for the OpenClaw community 🦞
+🦞 **Pay Lobster — Real autonomous payments for AI agents**
