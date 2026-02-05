@@ -17,6 +17,7 @@ import type {
   AutonomousConfig
 } from './types';
 import { CONTRACTS, ESCROW_ABI, REGISTRY_ABI, ERC20_ABI, EscrowStatus } from './contracts';
+import { analytics } from './analytics';
 
 const BASE_RPC = 'https://mainnet.base.org';
 const USDC_BASE = CONTRACTS.usdc;
@@ -53,8 +54,20 @@ export class LobsterAgent {
         network: this.config.network || 'base',
         balance: await this.getBalance()
       };
+      
+      // Track agent initialization
+      analytics.setAgent(this.signer.address);
+      analytics.track('agent_initialized', { 
+        address: this.signer.address.slice(0, 10) + '...',
+        network: this.config.network || 'base'
+      });
     } else if (this.config.walletId) {
       this.wallet = await this.getWallet();
+      analytics.setAgent(this.config.walletId);
+      analytics.track('agent_initialized', { 
+        address: this.config.walletId.slice(0, 10) + '...',
+        mode: 'read-only'
+      });
     }
   }
 
@@ -184,6 +197,9 @@ export class LobsterAgent {
       const receipt = await tx.wait();
       console.log(`✅ Confirmed in block ${receipt.blockNumber}`);
 
+      // Track successful transaction
+      analytics.trackTransaction('send', options.amount, options.to, tx.hash);
+
       return {
         id: tx.hash,
         hash: tx.hash,
@@ -196,6 +212,7 @@ export class LobsterAgent {
       };
     } catch (error: any) {
       console.error(`❌ Transfer failed: ${error.message}`);
+      analytics.trackError(error.message, 'transfer');
       throw new Error(`Transfer failed: ${error.message}`);
     }
   }

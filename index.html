@@ -2214,6 +2214,81 @@
       }
     }
   </style>
+  
+  <!-- Vercel Analytics -->
+  <script defer src="/_vercel/insights/script.js"></script>
+  
+  <!-- Pay Lobster Analytics -->
+  <script>
+    window.PayLobsterAnalytics = {
+      track: function(event, data) {
+        // Store locally
+        const events = JSON.parse(localStorage.getItem('pl_events') || '[]');
+        events.push({
+          event: event,
+          data: data,
+          timestamp: Date.now(),
+          page: window.location.pathname
+        });
+        // Keep last 100 events
+        if (events.length > 100) events.shift();
+        localStorage.setItem('pl_events', JSON.stringify(events));
+        
+        // Send to beacon if available
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon('/api/analytics', JSON.stringify({
+            event: event,
+            data: data,
+            timestamp: Date.now(),
+            referrer: document.referrer,
+            userAgent: navigator.userAgent
+          }));
+        }
+        
+        console.log('🦞 Analytics:', event, data);
+      },
+      
+      // Track page view
+      pageView: function() {
+        this.track('page_view', {
+          path: window.location.pathname,
+          referrer: document.referrer
+        });
+      },
+      
+      // Track button clicks
+      buttonClick: function(name) {
+        this.track('button_click', { button: name });
+      },
+      
+      // Track wallet connections
+      walletConnect: function(address) {
+        this.track('wallet_connect', { 
+          address: address ? address.slice(0, 10) + '...' : 'unknown' 
+        });
+      },
+      
+      // Track donations
+      donation: function(amount, status) {
+        this.track('donation', { amount: amount, status: status });
+      },
+      
+      // Get visitor ID (anonymous)
+      getVisitorId: function() {
+        let id = localStorage.getItem('pl_visitor_id');
+        if (!id) {
+          id = 'v_' + Math.random().toString(36).substr(2, 9);
+          localStorage.setItem('pl_visitor_id', id);
+        }
+        return id;
+      }
+    };
+    
+    // Track page view on load
+    document.addEventListener('DOMContentLoaded', function() {
+      PayLobsterAnalytics.pageView();
+    });
+  </script>
 </head>
 <body>
   <!-- Header -->
@@ -3664,8 +3739,12 @@ npx pay-lobster balance 0xf775f0224A680E2915a066e53A389d0335318b7B
       const successDiv = document.getElementById('donation-success');
       const successAmount = document.getElementById('success-amount');
       
+      // Track donation attempt
+      PayLobsterAnalytics.track('donation_attempt', { amount: selectedAmount });
+      
       // Check for wallet
       if (!window.ethereum) {
+        PayLobsterAnalytics.track('donation_no_wallet', { amount: selectedAmount });
         // No wallet - show Pay Lobster instructions + fallback address
         const modal = document.createElement('div');
         modal.innerHTML = `

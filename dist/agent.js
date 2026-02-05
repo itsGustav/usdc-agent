@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LobsterAgent = void 0;
 const ethers_1 = require("ethers");
 const contracts_1 = require("./contracts");
+const analytics_1 = require("./analytics");
 const BASE_RPC = 'https://mainnet.base.org';
 const USDC_BASE = contracts_1.CONTRACTS.usdc;
 class LobsterAgent {
@@ -33,9 +34,20 @@ class LobsterAgent {
                 network: this.config.network || 'base',
                 balance: await this.getBalance()
             };
+            // Track agent initialization
+            analytics_1.analytics.setAgent(this.signer.address);
+            analytics_1.analytics.track('agent_initialized', {
+                address: this.signer.address.slice(0, 10) + '...',
+                network: this.config.network || 'base'
+            });
         }
         else if (this.config.walletId) {
             this.wallet = await this.getWallet();
+            analytics_1.analytics.setAgent(this.config.walletId);
+            analytics_1.analytics.track('agent_initialized', {
+                address: this.config.walletId.slice(0, 10) + '...',
+                mode: 'read-only'
+            });
         }
     }
     /**
@@ -144,6 +156,8 @@ class LobsterAgent {
             // Wait for confirmation
             const receipt = await tx.wait();
             console.log(`✅ Confirmed in block ${receipt.blockNumber}`);
+            // Track successful transaction
+            analytics_1.analytics.trackTransaction('send', options.amount, options.to, tx.hash);
             return {
                 id: tx.hash,
                 hash: tx.hash,
@@ -157,6 +171,7 @@ class LobsterAgent {
         }
         catch (error) {
             console.error(`❌ Transfer failed: ${error.message}`);
+            analytics_1.analytics.trackError(error.message, 'transfer');
             throw new Error(`Transfer failed: ${error.message}`);
         }
     }
