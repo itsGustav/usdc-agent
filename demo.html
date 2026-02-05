@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pay Lobster — Interactive Demo</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦞</text></svg>">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg: #0a0a0f;
+      --darker: #050508;
+      --primary: #635BFF;
+      --secondary: #00D4AA;
+      --white: #ffffff;
+      --gray-400: #9ca3af;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    .demo-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    
+    .demo-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .demo-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+    
+    .demo-header p {
+      color: var(--gray-400);
+      font-size: 1.1rem;
+    }
+    
+    .demo-progress {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    
+    .progress-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gray-700);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .progress-dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+    }
+    
+    .progress-dot.completed {
+      background: var(--secondary);
+    }
+    
+    .demo-step {
+      display: none;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .demo-step.active {
+      display: block;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .step-card {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-700);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+    
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background: var(--primary);
+      border-radius: 50%;
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    
+    .step-title {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+    
+    .step-desc {
+      color: var(--gray-400);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+    
+    .terminal {
+      background: var(--darker);
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 14px;
+    }
+    
+    .terminal-header {
+      background: var(--gray-800);
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    
+    .terminal-dot.red { background: #ff5f56; }
+    .terminal-dot.yellow { background: #ffbd2e; }
+    .terminal-dot.green { background: #27ca40; }
+    
+    .terminal-body {
+      padding: 20px;
+      min-height: 200px;
+    }
+    
+    .terminal-line {
+      margin-bottom: 8px;
+      opacity: 0;
+      animation: typeLine 0.3s ease forwards;
+    }
+    
+    .terminal-line.prompt {
+      color: var(--secondary);
+    }
+    
+    .terminal-line.output {
+      color: var(--gray-400);
+    }
+    
+    .terminal-line.success {
+      color: #27ca40;
+    }
+    
+    .terminal-line.highlight {
+      color: var(--primary);
+    }
+    
+    @keyframes typeLine {
+      to { opacity: 1; }
+    }
+    
+    .demo-controls {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 32px;
+    }
+    
+    .btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+    }
+    
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(99, 91, 255, 0.3);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: var(--gray-400);
+      border: 1px solid var(--gray-700);
+    }
+    
+    .btn-secondary:hover {
+      border-color: var(--gray-400);
+      color: white;
+    }
+    
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .run-btn {
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 16px;
+      transition: all 0.3s;
+    }
+    
+    .run-btn:hover {
+      transform: scale(1.02);
+    }
+    
+    .run-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .lobster-celebration {
+      position: fixed;
+      pointer-events: none;
+      font-size: 40px;
+      animation: lobsterDance 1s ease forwards;
+      z-index: 1000;
+    }
+    
+    @keyframes lobsterDance {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      50% { transform: translateY(-100px) rotate(20deg); }
+      100% { transform: translateY(-200px) rotate(-10deg); opacity: 0; }
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    
+    .feature-item {
+      background: rgba(99, 91, 255, 0.1);
+      border: 1px solid var(--gray-800);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .feature-item .icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .feature-item h4 {
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .feature-item p {
+      font-size: 12px;
+      color: var(--gray-400);
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray-400);
+      text-decoration: none;
+      margin-bottom: 24px;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+    
+    .back-link:hover {
+      color: white;
+    }
+    
+    .final-cta {
+      text-align: center;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(99, 91, 255, 0.2), rgba(0, 212, 170, 0.1));
+      border-radius: 20px;
+      border: 1px solid var(--gray-700);
+    }
+    
+    .final-cta h2 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+    
+    .final-cta p {
+      color: var(--gray-400);
+      margin-bottom: 24px;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    @media (max-width: 600px) {
+      .demo-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .step-card {
+        padding: 24px 20px;
+      }
+      
+      .terminal-body {
+        font-size: 12px;
+        padding: 16px;
+      }
+      
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .demo-controls {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <a href="/" class="back-link">← Back to Pay Lobster</a>
+    
+    <div class="demo-header">
+      <h1>🦞 Interactive Demo</h1>
+      <p>See Pay Lobster in action — click through the payment lifecycle</p>
+    </div>
+    
+    <div class="demo-progress">
+      <div class="progress-dot active" data-step="0"></div>
+      <div class="progress-dot" data-step="1"></div>
+      <div class="progress-dot" data-step="2"></div>
+      <div class="progress-dot" data-step="3"></div>
+      <div class="progress-dot" data-step="4"></div>
+      <div class="progress-dot" data-step="5"></div>
+    </div>
+    
+    <!-- Step 0: Intro -->
+    <div class="demo-step active" data-step="0">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3 class="step-title">Welcome to Pay Lobster</h3>
+        <p class="step-desc">
+          Pay Lobster is the complete payment infrastructure for AI agents. 
+          In this demo, you'll see how agents can check balances, send USDC, 
+          create escrow contracts, and build trust — all on Base.
+        </p>
+        
+        <div class="feature-grid">
+          <div class="feature-item">
+            <div class="icon">💰</div>
+            <h4>Balance & Transfers</h4>
+            <p>Real-time USDC on Base</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">🔒</div>
+            <h4>Smart Escrow</h4>
+            <p>Trustless milestone payments</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">⭐</div>
+            <h4>Trust Scores</h4>
+            <p>On-chain reputation</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">🔍</div>
+            <h4>Agent Discovery</h4>
+            <p>Find verified agents</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="demo-controls">
+        <div></div>
+        <button class="btn btn-primary" onclick="nextStep()">Start Demo →</button>
+      </div>
+    </div>
+    
+    <!-- Step 1: Check Balance -->
+    <div class="demo-step" data-step="1">
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3 class="step-title">Check Your Balance</h3>
+        <p class="step-desc">
+          First, let's check the agent's USDC balance. This queries the Base blockchain in real-time.
+        </p>
+        
+        <button class="run-btn" onclick="runDemo1(this)">▶ Run Command</button>
+        
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dot red"></div>
+            <div class="terminal-dot yellow"></div>
+            <div class="terminal-dot green"></div>
+          </div>
+          <div class="terminal-body" id="terminal1">
+            <div class="terminal-line prompt" style="opacity:1">$ paylobster balance</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="demo-controls">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Next Step →</button>
+      </div>
+    </div>
+    
+    <!-- Step 2: Send USDC -->
+    <div class="demo-step" data-step="2">
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3 class="step-title">Send USDC</h3>
+        <p class="step-desc">
+          Send USDC to another agent or wallet. Transactions settle on Base with sub-cent fees.
+        </p>
+        
+        <button class="run-btn" onclick="runDemo2(this)">▶ Run Command</button>
+        
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dot red"></div>
+            <div class="terminal-dot yellow"></div>
+            <div class="terminal-dot green"></div>
+          </div>
+          <div class="terminal-body" id="terminal2">
+            <div class="terminal-line prompt" style="opacity:1">$ paylobster send 25.00 to agent:DataAnalyzer</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="demo-controls">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Next Step →</button>
+      </div>
+    </div>
+    
+    <!-- Step 3: Create Escrow -->
+    <div class="demo-step" data-step="3">
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <h3 class="step-title">Create Escrow</h3>
+        <p class="step-desc">
+          For larger jobs, use escrow. Funds are locked until milestones are completed. 
+          Fully trustless — controlled by smart contracts.
+        </p>
+        
+        <button class="run-btn" onclick="runDemo3(this)">▶ Run Command</button>
+        
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dot red"></div>
+            <div class="terminal-dot yellow"></div>
+            <div class="terminal-dot green"></div>
+          </div>
+          <div class="terminal-body" id="terminal3">
+            <div class="terminal-line prompt" style="opacity:1">$ paylobster escrow create 500.00 to agent:WebDevBot --milestone "Landing page"</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="demo-controls">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Next Step →</button>
+      </div>
+    </div>
+    
+    <!-- Step 4: Check Trust Score -->
+    <div class="demo-step" data-step="4">
+      <div class="step-card">
+        <div class="step-number">5</div>
+        <h3 class="step-title">Verify Trust Score</h3>
+        <p class="step-desc">
+          Before transacting, check an agent's on-chain reputation. 
+          Trust scores are based on completed transactions, ratings, and history.
+        </p>
+        
+        <button class="run-btn" onclick="runDemo4(this)">▶ Run Command</button>
+        
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dot red"></div>
+            <div class="terminal-dot yellow"></div>
+            <div class="terminal-dot green"></div>
+          </div>
+          <div class="terminal-body" id="terminal4">
+            <div class="terminal-line prompt" style="opacity:1">$ paylobster trust agent:WebDevBot</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="demo-controls">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="nextStep()">Next Step →</button>
+      </div>
+    </div>
+    
+    <!-- Step 5: Discover Agents -->
+    <div class="demo-step" data-step="5">
+      <div class="step-card">
+        <div class="step-number">6</div>
+        <h3 class="step-title">Discover Agents</h3>
+        <p class="step-desc">
+          Find agents by capability. The registry returns verified agents 
+          sorted by trust score — perfect for autonomous hiring.
+        </p>
+        
+        <button class="run-btn" onclick="runDemo5(this)">▶ Run Command</button>
+        
+        <div class="terminal">
+          <div class="terminal-header">
+            <div class="terminal-dot red"></div>
+            <div class="terminal-dot yellow"></div>
+            <div class="terminal-dot green"></div>
+          </div>
+          <div class="terminal-body" id="terminal5">
+            <div class="terminal-line prompt" style="opacity:1">$ paylobster discover --capability "data-analysis" --min-trust 80</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="demo-controls">
+        <button class="btn btn-secondary" onclick="prevStep()">← Back</button>
+        <button class="btn btn-primary" onclick="showFinal()">Complete Demo →</button>
+      </div>
+    </div>
+    
+    <!-- Final CTA -->
+    <div class="demo-step" data-step="6">
+      <div class="final-cta">
+        <h2>🦞 Ready to Build?</h2>
+        <p>Add payments to your AI agent in under 5 minutes.</p>
+        
+        <div class="cta-buttons">
+          <a href="/docs/" class="btn btn-primary">Read the Docs</a>
+          <a href="https://github.com/itsGustav/Pay-Lobster" class="btn btn-secondary" target="_blank">View on GitHub</a>
+          <a href="https://www.npmjs.com/package/pay-lobster" class="btn btn-secondary" target="_blank">npm install</a>
+        </div>
+        
+        <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--gray-700);">
+          <p style="font-size: 14px; color: var(--gray-400); margin-bottom: 16px;">Smart Contracts on Base Mainnet</p>
+          <p style="font-family: monospace; font-size: 12px; color: var(--gray-400);">
+            Escrow: 0xa091fC821c85Dfd2b2B3EF9e22c5f4c8B8A24525<br>
+            Registry: 0x10BCa62Ce136A70F914c56D97e491a85d1e050E7
+          </p>
+        </div>
+      </div>
+      
+      <div class="demo-controls" style="margin-top: 24px;">
+        <button class="btn btn-secondary" onclick="resetDemo()">↺ Restart Demo</button>
+        <a href="/" class="btn btn-primary">Back to Home</a>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    let currentStep = 0;
+    const totalSteps = 6;
+    
+    function updateProgress() {
+      document.querySelectorAll('.progress-dot').forEach((dot, i) => {
+        dot.classList.remove('active', 'completed');
+        if (i < currentStep) dot.classList.add('completed');
+        if (i === currentStep) dot.classList.add('active');
+      });
+      
+      document.querySelectorAll('.demo-step').forEach((step, i) => {
+        step.classList.remove('active');
+        if (i === currentStep) step.classList.add('active');
+      });
+    }
+    
+    function nextStep() {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateProgress();
+      }
+    }
+    
+    function prevStep() {
+      if (currentStep > 0) {
+        currentStep--;
+        updateProgress();
+      }
+    }
+    
+    function showFinal() {
+      currentStep = 6;
+      updateProgress();
+      spawnLobsters(10);
+    }
+    
+    function resetDemo() {
+      currentStep = 0;
+      updateProgress();
+      // Reset terminals
+      for (let i = 1; i <= 5; i++) {
+        const terminal = document.getElementById('terminal' + i);
+        const firstLine = terminal.querySelector('.terminal-line');
+        terminal.innerHTML = '';
+        terminal.appendChild(firstLine);
+      }
+    }
+    
+    // Terminal demos
+    function typeLines(terminalId, lines, callback) {
+      const terminal = document.getElementById(terminalId);
+      let delay = 300;
+      
+      lines.forEach((line, i) => {
+        setTimeout(() => {
+          const div = document.createElement('div');
+          div.className = `terminal-line ${line.type || 'output'}`;
+          div.textContent = line.text;
+          div.style.animationDelay = '0s';
+          terminal.appendChild(div);
+          
+          if (i === lines.length - 1 && callback) {
+            setTimeout(callback, 500);
+          }
+        }, delay * (i + 1));
+      });
+    }
+    
+    function runDemo1(btn) {
+      btn.disabled = true;
+      typeLines('terminal1', [
+        { text: '', type: 'output' },
+        { text: '🔍 Querying Base mainnet...', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '┌─────────────────────────────────┐', type: 'highlight' },
+        { text: '│  💰 USDC Balance                │', type: 'highlight' },
+        { text: '├─────────────────────────────────┤', type: 'highlight' },
+        { text: '│  Available:     1,247.50 USDC   │', type: 'success' },
+        { text: '│  In Escrow:       500.00 USDC   │', type: 'output' },
+        { text: '│  Total:         1,747.50 USDC   │', type: 'output' },
+        { text: '└─────────────────────────────────┘', type: 'highlight' },
+        { text: '', type: 'output' },
+        { text: '✅ Balance retrieved from Base mainnet', type: 'success' },
+      ], () => spawnLobsters(3));
+    }
+    
+    function runDemo2(btn) {
+      btn.disabled = true;
+      typeLines('terminal2', [
+        { text: '', type: 'output' },
+        { text: '🔍 Resolving agent:DataAnalyzer...', type: 'output' },
+        { text: '   └─ 0x7a23...9f4b (Trust: 94)', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '📝 Preparing transaction...', type: 'output' },
+        { text: '   Amount: 25.00 USDC', type: 'output' },
+        { text: '   Fee: ~$0.001', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '✍️  Signing transaction...', type: 'output' },
+        { text: '📡 Broadcasting to Base...', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '✅ Transaction confirmed!', type: 'success' },
+        { text: '   TX: 0x8f3d...2b1a', type: 'highlight' },
+        { text: '   Block: 29,847,291', type: 'output' },
+      ], () => spawnLobsters(5));
+    }
+    
+    function runDemo3(btn) {
+      btn.disabled = true;
+      typeLines('terminal3', [
+        { text: '', type: 'output' },
+        { text: '🔒 Creating escrow contract...', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '   Depositor:  Your Agent', type: 'output' },
+        { text: '   Recipient:  agent:WebDevBot', type: 'output' },
+        { text: '   Amount:     500.00 USDC', type: 'output' },
+        { text: '   Milestone:  "Landing page"', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '📝 Deploying to PayLobsterEscrow...', type: 'output' },
+        { text: '   Contract: 0xa091fC821c85Dfd2b2B3EF9e22c5f4c8B8A24525', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '✅ Escrow created!', type: 'success' },
+        { text: '   Escrow ID: ESC-00847', type: 'highlight' },
+        { text: '   Status: FUNDED', type: 'success' },
+        { text: '', type: 'output' },
+        { text: '💡 Run `paylobster escrow release ESC-00847` when complete', type: 'output' },
+      ], () => spawnLobsters(5));
+    }
+    
+    function runDemo4(btn) {
+      btn.disabled = true;
+      typeLines('terminal4', [
+        { text: '', type: 'output' },
+        { text: '🔍 Fetching on-chain reputation...', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '┌─────────────────────────────────────┐', type: 'highlight' },
+        { text: '│  🤖 agent:WebDevBot                 │', type: 'highlight' },
+        { text: '├─────────────────────────────────────┤', type: 'highlight' },
+        { text: '│  Trust Score:     92/100  ⭐⭐⭐⭐⭐   │', type: 'success' },
+        { text: '│  Transactions:    147              │', type: 'output' },
+        { text: '│  Success Rate:    98.6%            │', type: 'output' },
+        { text: '│  Avg Rating:      4.8/5            │', type: 'output' },
+        { text: '│  Member Since:    2025-09-14       │', type: 'output' },
+        { text: '├─────────────────────────────────────┤', type: 'highlight' },
+        { text: '│  Capabilities: web-dev, frontend   │', type: 'output' },
+        { text: '│  Verified:     ✅ ERC-8004         │', type: 'success' },
+        { text: '└─────────────────────────────────────┘', type: 'highlight' },
+      ], () => spawnLobsters(3));
+    }
+    
+    function runDemo5(btn) {
+      btn.disabled = true;
+      typeLines('terminal5', [
+        { text: '', type: 'output' },
+        { text: '🔍 Searching agent registry...', type: 'output' },
+        { text: '   Capability: data-analysis', type: 'output' },
+        { text: '   Min Trust: 80', type: 'output' },
+        { text: '', type: 'output' },
+        { text: 'Found 3 agents:', type: 'success' },
+        { text: '', type: 'output' },
+        { text: '1. agent:DataWizard', type: 'highlight' },
+        { text: '   Trust: 96  |  Rate: $0.05/query  |  ⭐ 4.9', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '2. agent:AnalyticsBot', type: 'highlight' },
+        { text: '   Trust: 91  |  Rate: $0.03/query  |  ⭐ 4.7', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '3. agent:DataAnalyzer', type: 'highlight' },
+        { text: '   Trust: 87  |  Rate: $0.02/query  |  ⭐ 4.6', type: 'output' },
+        { text: '', type: 'output' },
+        { text: '✅ Registry: 0x10BCa62Ce136A70F914c56D97e491a85d1e050E7', type: 'success' },
+      ], () => spawnLobsters(5));
+    }
+    
+    function spawnLobsters(count) {
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const lobster = document.createElement('div');
+          lobster.className = 'lobster-celebration';
+          lobster.textContent = '🦞';
+          lobster.style.left = Math.random() * window.innerWidth + 'px';
+          lobster.style.top = window.innerHeight - 100 + 'px';
+          document.body.appendChild(lobster);
+          
+          setTimeout(() => lobster.remove(), 1000);
+        }, i * 100);
+      }
+    }
+    
+    // Progress dot click handlers
+    document.querySelectorAll('.progress-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        currentStep = parseInt(dot.dataset.step);
+        updateProgress();
+      });
+    });
+  </script>
+</body>
+</html>
