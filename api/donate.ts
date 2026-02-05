@@ -9,7 +9,7 @@ import { initiateDeveloperControlledWalletsClient } from '@circle-fin/developer-
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 const RECIPIENT_WALLET = '0xf775f0224A680E2915a066e53A389d0335318b7B';
-const CIRCLE_API_KEY = process.env.CIRCLE_API_KEY || '7a863380db6b577897fb9bf1d1456cd5:fbca1f84b6b85a2fdae5f6a0478fc4b4';
+const CIRCLE_API_KEY = process.env.CIRCLE_API_KEY || '';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS headers for browser access
