@@ -15,6 +15,6 @@
     "resolveJsonModule": true,
     "moduleResolution": "node"
   },
-  "include": ["lib/index.ts", "lib/agent.ts", "lib/easy.ts", "lib/types.ts"],
+  "include": ["lib/index.ts", "lib/agent.ts", "lib/easy.ts", "lib/types.ts", "lib/cli.ts"],
   "exclude": ["node_modules", "dist", "docs", "api"]
 }
