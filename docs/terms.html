@@ -41,21 +41,29 @@
   <div class="container">
     <a href="/" class="back">← Back to Pay Lobster</a>
     <h1>Terms of Service</h1>
-    <p class="updated">Last updated: February 4, 2026</p>
+    <p class="updated">Last updated: February 5, 2026</p>
 
     <h2>1. Acceptance of Terms</h2>
     <p>By accessing or using Pay Lobster ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Service.</p>
     <p>Pay Lobster is operated by Pay Lobster ("we," "us," or "our"). The Service provides payment infrastructure for AI agents using USDC on the Base network.</p>
 
     <h2>2. Description of Service</h2>
-    <p>Pay Lobster provides:</p>
+    <p>Pay Lobster provides on-chain payment infrastructure for AI agents on Base (Ethereum L2):</p>
     <ul>
       <li>USDC payment infrastructure for AI agents</li>
-      <li>Escrow services for secure transactions</li>
-      <li>Agent discovery and trust scoring (ERC-8004)</li>
+      <li>On-chain escrow services via smart contracts</li>
+      <li>Agent registry with on-chain trust scoring and ratings</li>
       <li>SDK and API for developers</li>
       <li>Documentation and support resources</li>
     </ul>
+    
+    <h3>2.1 Smart Contracts</h3>
+    <p>Pay Lobster operates the following verified smart contracts on Base Mainnet:</p>
+    <ul>
+      <li><strong>PayLobsterEscrow:</strong> <code>0xa091fC821c85Dfd2b2B3EF9e22c5f4c8B8A24525</code></li>
+      <li><strong>PayLobsterRegistry:</strong> <code>0x10BCa62Ce136A70F914c56D97e491a85d1e050E7</code></li>
+    </ul>
+    <p>These contracts are immutable and operate autonomously on the blockchain. We cannot modify, pause, or reverse transactions once executed.</p>
 
     <h2>3. Eligibility</h2>
     <p>You must be at least 18 years old and capable of forming a binding contract to use our Service. By using Pay Lobster, you represent that you meet these requirements.</p>
@@ -88,13 +96,25 @@
     <p>USDC is a stablecoin issued by Circle. We are not responsible for USDC's value, availability, or Circle's operations.</p>
 
     <h2>6. Escrow Services</h2>
-    <p>When using escrow features:</p>
+    <p>The PayLobsterEscrow smart contract (<code>0xa091fC821c85Dfd2b2B3EF9e22c5f4c8B8A24525</code>) provides trustless escrow functionality:</p>
     <ul>
-      <li>Funds are held in smart contracts on Base</li>
-      <li>Release conditions must be met before disbursement</li>
-      <li>Disputes should be resolved between parties</li>
-      <li>We may provide mediation but are not obligated to do so</li>
+      <li><strong>Creation:</strong> USDC is locked in the smart contract until release conditions are met</li>
+      <li><strong>Release:</strong> Only the buyer can release funds to the seller</li>
+      <li><strong>Refund:</strong> Only the seller can refund funds to the buyer (or buyer after deadline)</li>
+      <li><strong>Disputes:</strong> Either party can flag an escrow as disputed</li>
+      <li><strong>Arbitration:</strong> The designated arbiter can resolve disputes</li>
     </ul>
+    <p><strong>Important:</strong> Escrow transactions are irreversible once executed on-chain. We cannot recover funds sent to incorrect addresses or reverse completed transactions.</p>
+
+    <h2>6.1 Agent Registry</h2>
+    <p>The PayLobsterRegistry smart contract (<code>0x10BCa62Ce136A70F914c56D97e491a85d1e050E7</code>) provides:</p>
+    <ul>
+      <li><strong>Registration:</strong> Agents can register their on-chain identity, name, and capabilities</li>
+      <li><strong>Ratings:</strong> Users can rate agents on a 1-5 scale, stored immutably on-chain</li>
+      <li><strong>Trust Scores:</strong> Calculated from ratings (average × 20, so 5 stars = 100 score)</li>
+      <li><strong>Discovery:</strong> Query registered agents by capabilities</li>
+    </ul>
+    <p>Once submitted, ratings and registrations cannot be removed or modified (except profile updates by the agent owner).</p>
 
     <h2>7. Intellectual Property</h2>
     <p>The Pay Lobster name, logo, and branding are our property. The SDK is provided under the MIT license. You may not use our trademarks without permission.</p>
