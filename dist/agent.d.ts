@@ -1,10 +1,13 @@
 /**
  * LobsterAgent - Main class for Pay Lobster SDK
+ * Now with REAL transaction signing! 🦞
  */
 import type { LobsterConfig, Wallet, Transfer, Escrow, TrustScore, Agent, TransferOptions, EscrowOptions, DiscoverOptions, AutonomousConfig } from './types';
 export declare class LobsterAgent {
     private config;
     private wallet?;
+    private signer?;
+    private provider?;
     private autonomousConfig?;
     constructor(config?: LobsterConfig);
     /**
@@ -24,11 +27,16 @@ export declare class LobsterAgent {
      */
     getBalance(): Promise<string>;
     /**
+     * Get ETH balance (needed for gas)
+     */
+    getEthBalance(): Promise<string>;
+    /**
      * Get deposit address
      */
     getDepositAddress(): Promise<string>;
     /**
      * Transfer USDC to another address
+     * REAL implementation with on-chain signing! 🦞
      */
     transfer(options: TransferOptions): Promise<Transfer>;
     /**

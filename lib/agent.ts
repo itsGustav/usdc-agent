@@ -1,7 +1,9 @@
 /**
  * LobsterAgent - Main class for Pay Lobster SDK
+ * Now with REAL transaction signing! 🦞
  */
 
+import { ethers } from 'ethers';
 import type {
   LobsterConfig,
   Wallet,
@@ -18,9 +20,18 @@ import type {
 const BASE_RPC = 'https://mainnet.base.org';
 const USDC_BASE = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
 
+// Minimal ERC-20 ABI for transfer
+const ERC20_ABI = [
+  'function transfer(address to, uint256 amount) returns (bool)',
+  'function balanceOf(address owner) view returns (uint256)',
+  'function decimals() view returns (uint8)'
+];
+
 export class LobsterAgent {
   private config: LobsterConfig;
   private wallet?: Wallet;
+  private signer?: ethers.Wallet;
+  private provider?: ethers.JsonRpcProvider;
   private autonomousConfig?: AutonomousConfig;
 
   constructor(config: LobsterConfig = {}) {
@@ -35,7 +46,20 @@ export class LobsterAgent {
    * Initialize the agent and connect to wallet
    */
   async initialize(): Promise<void> {
-    if (this.config.walletId) {
+    // Set up provider
+    const rpcUrl = this.config.rpcUrl || BASE_RPC;
+    this.provider = new ethers.JsonRpcProvider(rpcUrl);
+
+    // Set up signer if private key provided
+    if (this.config.privateKey) {
+      this.signer = new ethers.Wallet(this.config.privateKey, this.provider);
+      this.wallet = {
+        id: 'local',
+        address: this.signer.address,
+        network: this.config.network || 'base',
+        balance: await this.getBalance()
+      };
+    } else if (this.config.walletId) {
       this.wallet = await this.getWallet();
     }
   }
@@ -71,7 +95,7 @@ export class LobsterAgent {
    * Get current USDC balance
    */
   async getBalance(): Promise<string> {
-    const address = this.wallet?.address || this.config.walletId;
+    const address = this.signer?.address || this.wallet?.address || this.config.walletId;
     if (!address) throw new Error('No wallet address');
 
     const rpc = this.config.rpcUrl || BASE_RPC;
@@ -94,6 +118,31 @@ export class LobsterAgent {
   }
 
   /**
+   * Get ETH balance (needed for gas)
+   */
+  async getEthBalance(): Promise<string> {
+    const address = this.signer?.address || this.wallet?.address || this.config.walletId;
+    if (!address) throw new Error('No wallet address');
+
+    const rpc = this.config.rpcUrl || BASE_RPC;
+    
+    const response = await fetch(rpc, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'eth_getBalance',
+        params: [address, 'latest']
+      })
+    });
+    
+    const result: any = await response.json();
+    const balance = parseInt(result.result || '0', 16) / 1e18;
+    return balance.toFixed(6);
+  }
+
+  /**
    * Get deposit address
    */
   async getDepositAddress(): Promise<string> {
@@ -102,20 +151,59 @@ export class LobsterAgent {
 
   /**
    * Transfer USDC to another address
+   * REAL implementation with on-chain signing! 🦞
    */
   async transfer(options: TransferOptions): Promise<Transfer> {
-    // Implementation requires private key or Circle wallet
-    console.log(`Transfer: ${options.amount} USDC to ${options.to}`);
+    if (!this.signer) {
+      throw new Error('No signer available. Provide privateKey in config to enable transfers.');
+    }
+
+    if (!this.provider) {
+      throw new Error('Provider not initialized. Call initialize() first.');
+    }
+
+    // Validate address
+    if (!ethers.isAddress(options.to)) {
+      throw new Error(`Invalid recipient address: ${options.to}`);
+    }
+
+    // Parse amount (USDC has 6 decimals)
+    const amount = ethers.parseUnits(options.amount, 6);
     
-    return {
-      id: `tx_${Date.now()}`,
-      status: 'pending',
-      amount: options.amount,
-      to: options.to,
-      from: this.wallet?.address || '',
-      memo: options.memo,
-      createdAt: new Date().toISOString()
-    };
+    // Check balance first
+    const usdc = new ethers.Contract(USDC_BASE, ERC20_ABI, this.signer);
+    const balance = await usdc.balanceOf(this.signer.address);
+    
+    if (balance < amount) {
+      const balanceFormatted = ethers.formatUnits(balance, 6);
+      throw new Error(`Insufficient balance. Have: ${balanceFormatted} USDC, Need: ${options.amount} USDC`);
+    }
+
+    console.log(`🦞 Sending ${options.amount} USDC to ${options.to}...`);
+
+    try {
+      // Execute the transfer
+      const tx = await usdc.transfer(options.to, amount);
+      console.log(`📤 Transaction submitted: ${tx.hash}`);
+      
+      // Wait for confirmation
+      const receipt = await tx.wait();
+      console.log(`✅ Confirmed in block ${receipt.blockNumber}`);
+
+      return {
+        id: tx.hash,
+        hash: tx.hash,
+        status: receipt.status === 1 ? 'confirmed' : 'failed',
+        amount: options.amount,
+        to: options.to,
+        from: this.signer.address,
+        memo: options.memo,
+        createdAt: new Date().toISOString()
+      };
+    } catch (error: any) {
+      console.error(`❌ Transfer failed: ${error.message}`);
+      throw new Error(`Transfer failed: ${error.message}`);
+    }
   }
 
   /**
