@@ -1,6 +1,8 @@
-# Pay Lobster v2.0 - Multi-Chain Architecture 🦞
+# Pay Lobster v2.1 - Multi-Chain Architecture 🦞
 
 Pay Lobster now supports **Base (Ethereum L2)** and **Solana** with the new **x402 protocol** for automatic HTTP payments!
+
+**New in v2.1:** Fund wallets with debit/credit cards via Coinbase Onramp! See [Card Payments](#card-payments).
 
 ## 🚀 What's New
 
@@ -244,6 +246,36 @@ import { MultiChainLobsterAgent } from 'pay-lobster';
 
 See `examples/multichain-example.ts` for complete working examples.
 
+## 💳 Card Payments
+
+**New in v2.1!** Fund wallets with debit/credit cards via Coinbase Onramp.
+
+### CLI
+```bash
+paylobster fund 100    # Opens URL for $100 USDC purchase
+```
+
+### SDK
+```typescript
+// Generate Coinbase Onramp URL
+const { url } = await agent.fundWithCard(100);
+console.log('Click to add funds:', url);
+
+// Simple URL (no CDP credentials needed)
+const simpleUrl = agent.getSimpleOnrampUrl(100, 'USDC');
+```
+
+### Supported Methods
+- Debit/credit cards (Visa, MC, etc.)
+- Apple Pay (US users)
+- Bank transfers (ACH, SEPA)
+- Coinbase balance
+
+**Fees:** ~1.5% (industry lowest)  
+**KYC:** Handled by Coinbase
+
+---
+
 ## 🙏 Credits
 
 Built by [@itsGustav](https://github.com/itsGustav) for the AI agent economy.
@@ -255,6 +287,6 @@ Powered by:
 
 ---
 
-**Version:** 2.0.0  
+**Version:** 2.1.0  
 **License:** MIT  
 **Website:** https://paylobster.com
