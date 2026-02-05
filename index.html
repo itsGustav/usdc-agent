@@ -1529,14 +1529,15 @@
       margin-bottom: 16px;
     }
     
-    /* Mobile how it works */
+    /* Mobile how it works - 2x2 grid */
     .how-it-works {
       padding: 60px 0;
     }
     
     .flow-container {
-      flex-direction: column;
-      gap: 24px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
       padding: 0;
     }
     
@@ -1544,21 +1545,36 @@
       display: none;
     }
     
+    .flow-step {
+      background: rgba(99, 91, 255, 0.05);
+      border: 1px solid var(--gray-800);
+      border-radius: 16px;
+      padding: 20px 16px;
+      transition: all 0.3s;
+    }
+    
+    .flow-step:hover {
+      border-color: var(--primary);
+      background: rgba(99, 91, 255, 0.1);
+    }
+    
     .flow-number {
-      width: 64px;
-      height: 64px;
-      font-size: 24px;
-      margin-bottom: 16px;
+      width: 48px;
+      height: 48px;
+      font-size: 20px;
+      margin-bottom: 12px;
+      border-width: 1px;
     }
     
     .flow-step h4 {
-      font-size: 17px;
-      margin-bottom: 6px;
+      font-size: 16px;
+      margin-bottom: 4px;
     }
     
     .flow-step p {
-      font-size: 14px;
+      font-size: 13px;
       max-width: 100%;
+      line-height: 1.4;
     }
     
     /* Mobile demo */
