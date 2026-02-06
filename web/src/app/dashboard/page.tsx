@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useAccount, useReadContract } from 'wagmi';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -28,7 +28,7 @@ import { formatUnits } from 'viem';
 
 export default function DashboardPage() {
   const { address, isConnected } = useAccount();
-  const { data: session } = useSession();
+  const { user, loading } = useAuth();
 
   // Fetch user data
   const {
@@ -85,21 +85,39 @@ export default function DashboardPage() {
     : 0;
 
   // Check if user is authenticated via email but hasn't connected wallet
-  const isEmailOnly = session?.user && !isConnected;
+  const isEmailOnly = user && !isConnected;
 
-  if (!isConnected && !session?.user) {
+  // Loading state
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
-        <Card className="max-w-md w-full text-center space-y-4">
+        <div className="animate-pulse text-center">
+          <div className="text-5xl mb-4">🦞</div>
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Auth required
+  if (!isConnected && !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <Card className="max-w-md w-full text-center space-y-4 p-8">
           <div className="text-5xl">🦞</div>
           <h1 className="text-2xl font-bold">Sign In Required</h1>
           <p className="text-gray-400">
             Sign in with email or connect your wallet to access your dashboard
           </p>
           <div className="flex flex-col gap-3 pt-2">
-            <Link href="/auth/signin" className="block">
-              <Button size="lg" className="w-full">
-                Sign In with Email
+            <Link href="/login" className="block">
+              <Button size="lg" className="w-full bg-orange-600 hover:bg-orange-500">
+                Sign In
+              </Button>
+            </Link>
+            <Link href="/signup" className="block">
+              <Button variant="outline" size="lg" className="w-full">
+                Create Account
               </Button>
             </Link>
           </div>
@@ -126,8 +144,8 @@ export default function DashboardPage() {
               <Skeleton className="h-10 w-64" />
             ) : isRegistered && agentName ? (
               `Welcome Back, ${agentName}`
-            ) : session?.user?.email ? (
-              `Welcome, ${session.user.email.split('@')[0]}`
+            ) : user?.email ? (
+              `Welcome, ${user.email.split('@')[0]}`
             ) : (
               'Welcome Back'
             )}
@@ -135,8 +153,8 @@ export default function DashboardPage() {
           <p className="text-base text-gray-400">
             {address ? (
               `${address.slice(0, 6)}...${address.slice(-4)}`
-            ) : session?.user?.email ? (
-              session.user.email
+            ) : user?.email ? (
+              user.email
             ) : (
               'Loading...'
             )}

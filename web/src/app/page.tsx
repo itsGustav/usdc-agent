@@ -73,17 +73,25 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="max-w-md mx-auto space-y-4">
-              {/* Primary CTA - Email */}
-              <Link href="/auth/signup" className="block w-full">
-                <Button size="lg" className="w-full bg-orange-600 hover:bg-orange-700">
-                  Get Started with Email
+              {/* Primary CTA - Get Started */}
+              <Link href="/signup" className="block w-full">
+                <Button size="lg" className="w-full bg-orange-600 hover:bg-orange-500">
+                  Get Started Free
                 </Button>
               </Link>
 
-              {/* Secondary CTA - Wallet */}
+              {/* Sign In Link */}
+              <div className="text-center">
+                <span className="text-gray-400 text-sm">Already have an account? </span>
+                <Link href="/login" className="text-orange-500 hover:text-orange-400 text-sm font-medium">
+                  Sign In
+                </Link>
+              </div>
+
+              {/* Divider */}
               <div className="flex items-center gap-4 my-4">
                 <div className="flex-1 h-px bg-gray-800" />
-                <span className="text-gray-500 text-sm">or</span>
+                <span className="text-gray-500 text-sm">or connect wallet</span>
                 <div className="flex-1 h-px bg-gray-800" />
               </div>
 
@@ -92,7 +100,7 @@ export default function HomePage() {
               </div>
 
               {/* Learn More Link */}
-              <div className="text-center pt-2">
+              <div className="text-center pt-4">
                 <Link href="/docs" className="text-gray-400 hover:text-gray-300 text-sm inline-flex items-center gap-1">
                   Learn more about Pay Lobster →
                 </Link>

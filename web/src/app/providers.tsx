@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 // Dynamically import the wallet providers to avoid SSR issues
 const WalletProviders = dynamic(
@@ -12,5 +13,9 @@ const WalletProviders = dynamic(
 );
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <WalletProviders>{children}</WalletProviders>;
+  return (
+    <AuthProvider>
+      <WalletProviders>{children}</WalletProviders>
+    </AuthProvider>
+  );
 }

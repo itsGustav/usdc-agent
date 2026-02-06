@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { useAccount } from 'wagmi';
-import { useSession } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const ConnectButton = dynamic(
   () => import('@rainbow-me/rainbowkit').then((mod) => mod.ConnectButton),
@@ -22,7 +22,7 @@ const navItems = [
 export function Navigation() {
   const pathname = usePathname();
   const { isConnected } = useAccount();
-  const { data: session, status } = useSession();
+  const { user, loading } = useAuth();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-950/80 backdrop-blur-md border-b border-gray-800">
@@ -60,7 +60,7 @@ export function Navigation() {
 
           {/* Auth & Wallet */}
           <div className="flex items-center gap-3">
-            {session ? (
+            {user ? (
               <>
                 {isConnected && (
                   <span className="hidden sm:flex items-center gap-2 text-xs text-gray-400">
@@ -79,8 +79,8 @@ export function Navigation() {
               </>
             ) : (
               <Link
-                href="/auth/signin"
-                className="btn-primary text-sm px-4 py-2"
+                href="/login"
+                className="bg-orange-600 hover:bg-orange-500 text-white text-sm px-4 py-2 rounded-lg font-medium transition-colors"
               >
                 Sign In
               </Link>
