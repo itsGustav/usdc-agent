@@ -7,28 +7,29 @@ export const tokens = {
   // Colors
   colors: {
     background: {
-      primary: '#0a0a0a',     // gray-950
-      secondary: '#111827',   // gray-900
-      tertiary: '#1f2937',    // gray-800
+      primary: '#0a0a0f',     // gray-950 (near-black with blue tint)
+      secondary: '#111827',   // gray-900 (card bg)
+      tertiary: '#1e293b',    // gray-800 (card border)
     },
     foreground: {
-      primary: '#f9fafb',     // gray-50
+      primary: '#f8fafc',     // gray-50
       secondary: '#d1d5db',   // gray-300
       tertiary: '#9ca3af',    // gray-400
-      muted: '#6b7280',       // gray-500
+      muted: '#94a3b8',       // gray-400 (muted)
     },
     border: {
-      default: '#1f2937',     // gray-800
+      default: '#1e293b',     // gray-800 (card border)
       hover: '#374151',       // gray-700
       focus: '#4b5563',       // gray-600
     },
     brand: {
-      orange: {
-        primary: '#ea580c',   // orange-600
-        hover: '#f97316',     // orange-500
-        active: '#c2410c',    // orange-700
-        light: '#fed7aa',     // orange-200
-        dark: '#431407',      // orange-950
+      blue: {
+        primary: '#2563eb',   // blue-600 (trust blue)
+        hover: '#3b82f6',     // blue-500 (primary hover)
+        active: '#1d4ed8',    // blue-700 (deep blue)
+        light: '#60a5fa',     // blue-400
+        dark: '#1e40af',      // blue-800
+        glow: 'rgba(37, 99, 235, 0.15)',
       },
     },
     semantic: {
@@ -38,8 +39,8 @@ export const tokens = {
         bg: 'rgba(34, 197, 94, 0.2)',
       },
       warning: {
-        primary: '#ea580c',   // orange-600
-        bg: 'rgba(234, 88, 12, 0.2)',
+        primary: '#2563eb',   // blue-600 (now trust blue)
+        bg: 'rgba(37, 99, 235, 0.2)',
       },
       error: {
         primary: '#ef4444',   // red-500
@@ -126,8 +127,8 @@ export const tokens = {
     lg: '0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.5)',
     xl: '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5)',
     '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
-    glow: '0 0 20px rgba(234, 88, 12, 0.3)',
-    glowLg: '0 0 30px rgba(234, 88, 12, 0.4)',
+    glow: '0 0 20px rgba(37, 99, 235, 0.15)',
+    glowLg: '0 0 30px rgba(37, 99, 235, 0.3)',
   },
 
   // Transitions

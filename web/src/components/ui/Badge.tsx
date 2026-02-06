@@ -10,7 +10,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     const variants = {
       default: 'bg-gray-800 text-gray-300',
       success: 'bg-green-500/20 text-green-500',
-      warning: 'bg-orange-600/20 text-orange-600',
+      warning: 'bg-blue-600/20 text-blue-600',
       error: 'bg-red-500/20 text-red-500',
     };
 

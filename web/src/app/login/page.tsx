@@ -91,7 +91,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowForgotPassword(true)}
-                    className="text-sm text-orange-500 hover:text-orange-400"
+                    className="text-sm text-blue-500 hover:text-blue-400"
                   >
                     Forgot password?
                   </button>
@@ -118,7 +118,7 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-orange-600 hover:bg-orange-500"
+                className="w-full bg-blue-600 hover:bg-blue-500"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -150,7 +150,7 @@ export default function LoginPage() {
             {/* Sign Up Link */}
             <div className="text-center text-sm text-gray-400">
               Don't have an account?{' '}
-              <Link href="/signup" className="text-orange-500 hover:text-orange-400 font-medium">
+              <Link href="/signup" className="text-blue-500 hover:text-blue-400 font-medium">
                 Sign Up
               </Link>
             </div>

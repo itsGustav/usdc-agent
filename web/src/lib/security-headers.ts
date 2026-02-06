@@ -63,3 +63,14 @@ export function getSecurityHeadersObject(): Record<string, string> {
     securityHeaders.map(h => [h.key, h.value])
   );
 }
+
+/**
+ * Apply security headers to a NextResponse
+ */
+export function applySecurityHeaders<T extends Response>(response: T): T {
+  const headers = getSecurityHeadersObject();
+  Object.entries(headers).forEach(([key, value]) => {
+    response.headers.set(key, value);
+  });
+  return response;
+}

@@ -159,15 +159,15 @@ export default function SignUpPage() {
                   checked={acceptedTerms}
                   onChange={(e) => setAcceptedTerms(e.target.checked)}
                   disabled={isLoading}
-                  className="mt-1 w-4 h-4 rounded border-gray-700 bg-gray-900 text-orange-600 focus:ring-orange-600 focus:ring-offset-gray-950"
+                  className="mt-1 w-4 h-4 rounded border-gray-700 bg-gray-900 text-blue-600 focus:ring-blue-600 focus:ring-offset-gray-950"
                 />
                 <span className="text-sm text-gray-400">
                   I agree to the{' '}
-                  <Link href="/docs/terms" className="text-orange-500 hover:text-orange-400">
+                  <Link href="/docs/terms" className="text-blue-500 hover:text-blue-400">
                     Terms of Service
                   </Link>{' '}
                   and{' '}
-                  <Link href="/docs/privacy" className="text-orange-500 hover:text-orange-400">
+                  <Link href="/docs/privacy" className="text-blue-500 hover:text-blue-400">
                     Privacy Policy
                   </Link>
                 </span>
@@ -184,7 +184,7 @@ export default function SignUpPage() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-orange-600 hover:bg-orange-500"
+                className="w-full bg-blue-600 hover:bg-blue-500"
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -216,7 +216,7 @@ export default function SignUpPage() {
             {/* Sign In Link */}
             <div className="text-center text-sm text-gray-400">
               Already have an account?{' '}
-              <Link href="/login" className="text-orange-500 hover:text-orange-400 font-medium">
+              <Link href="/login" className="text-blue-500 hover:text-blue-400 font-medium">
                 Sign In
               </Link>
             </div>

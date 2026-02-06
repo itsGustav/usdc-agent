@@ -30,8 +30,8 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <span className="text-2xl">🦞</span>
-            <span className="font-bold text-xl bg-gradient-to-r from-lobster-400 to-orange-400 bg-clip-text text-transparent">
+            <img src="/blue-lobster.svg" alt="Pay Lobster" className="w-8 h-8" />
+            <span className="font-bold text-xl bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
               Pay Lobster
             </span>
           </Link>
@@ -48,7 +48,7 @@ export function Navigation() {
                   href={item.href}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-lobster-500/20 text-lobster-400'
+                      ? 'bg-blue-500/20 text-blue-400'
                       : 'text-gray-400 hover:text-white hover:bg-gray-800'
                   }`}
                 >
@@ -78,12 +78,20 @@ export function Navigation() {
                 />
               </>
             ) : (
-              <Link
-                href="/login"
-                className="bg-orange-600 hover:bg-orange-500 text-white text-sm px-4 py-2 rounded-lg font-medium transition-colors"
-              >
-                Sign In
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="text-gray-400 hover:text-white text-sm px-3 py-2 rounded-lg font-medium transition-colors"
+                >
+                  Log In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="bg-blue-600 hover:bg-blue-500 text-white text-sm px-4 py-2 rounded-lg font-medium transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </div>
             )}
           </div>
         </div>

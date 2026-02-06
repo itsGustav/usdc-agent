@@ -10,13 +10,13 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading = false, children, disabled, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-orange-600 focus:ring-offset-2 focus:ring-offset-gray-950 disabled:opacity-50 disabled:cursor-not-allowed';
+    const baseStyles = 'inline-flex items-center justify-center font-medium rounded-lg transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:ring-offset-gray-950 disabled:opacity-50 disabled:cursor-not-allowed';
     
     const variants = {
-      primary: 'bg-orange-600 text-white hover:bg-orange-700 active:bg-orange-800 active:scale-95 shadow-sm hover:shadow-md',
+      primary: 'bg-blue-600 text-white hover:bg-blue-500 active:bg-blue-700 active:scale-95 shadow-sm hover:shadow-md hover:shadow-glow-blue',
       secondary: 'bg-gray-900 text-gray-50 border border-gray-800 hover:bg-gray-800 hover:border-gray-700 active:scale-95',
       ghost: 'text-gray-400 hover:text-gray-50 hover:bg-gray-900 active:scale-95',
-      outline: 'border border-gray-700 text-gray-50 hover:bg-gray-900 hover:border-gray-600 active:scale-95',
+      outline: 'border border-gray-700 text-gray-50 hover:bg-gray-900 hover:border-blue-600 active:scale-95',
     };
     
     const sizes = {

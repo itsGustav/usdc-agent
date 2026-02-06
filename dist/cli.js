@@ -45,6 +45,7 @@ const ethers_1 = require("ethers");
 const swap_1 = require("./swap");
 const stats_1 = require("./stats");
 const onramp_1 = require("./onramp");
+const agent_1 = require("./agent");
 const autonomous_1 = require("./autonomous");
 // V3 Contract Addresses (Base Mainnet)
 const V3_CONTRACTS = {
@@ -98,18 +99,11 @@ const DEFAULT_CONFIG = {
     setupComplete: false,
     version: '3.0.0',
 };
-// ASCII Art Banner
+// Simple header
 function showBanner() {
     console.log(`
-${c.cyan}  ██████╗  █████╗ ██╗   ██╗    ██╗      ██████╗ ██████╗ ███████╗████████╗███████╗██████╗ 
-  ██╔══██╗██╔══██╗╚██╗ ██╔╝    ██║     ██╔═══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
-  ██████╔╝███████║ ╚████╔╝     ██║     ██║   ██║██████╔╝███████╗   ██║   █████╗  ██████╔╝
-  ██╔═══╝ ██╔══██║  ╚██╔╝      ██║     ██║   ██║██╔══██╗╚════██║   ██║   ██╔══╝  ██╔══██╗
-  ██║     ██║  ██║   ██║       ███████╗╚██████╔╝██████╔╝███████║   ██║   ███████╗██║  ██║
-  ╚═╝     ╚═╝  ╚═╝   ╚═╝       ╚══════╝ ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝${c.reset}
-
-  ${c.dim}🦞 Payment Infrastructure for AI Agents${c.reset}
-  ${c.dim}   Built on Base • Powered by USDC${c.reset}
+  ${c.blue}🦞 Pay Lobster${c.reset}
+  ${c.dim}Payment Infrastructure for AI Agents${c.reset}
 `);
 }
 // Create readline interface
@@ -204,91 +198,86 @@ function getAddress(privateKey) {
 async function runSetupWizard() {
     const rl = createRL();
     const config = loadConfig();
-    console.log(`\n${c.bright}${c.cyan}═══════════════════════════════════════════════════════════${c.reset}`);
-    console.log(`${c.bright}              🦞 Pay Lobster Setup Wizard${c.reset}`);
-    console.log(`${c.bright}${c.cyan}═══════════════════════════════════════════════════════════${c.reset}\n`);
-    console.log(`${c.dim}This wizard will help you configure Pay Lobster for your AI agent.${c.reset}`);
-    console.log(`${c.dim}Your configuration will be stored securely at: ${CONFIG_FILE}${c.reset}\n`);
+    console.log(`\n  ${c.blue}🦞 Pay Lobster Setup${c.reset}`);
+    console.log(`  ${c.dim}──────────────────────${c.reset}\n`);
+    console.log(`  ${c.dim}Configure Pay Lobster for your AI agent${c.reset}`);
+    console.log(`  ${c.dim}Config: ${CONFIG_FILE}${c.reset}\n`);
     // Step 1: Agent Name
-    console.log(`${c.yellow}Step 1/4:${c.reset} ${c.bright}Agent Name${c.reset}`);
-    console.log(`${c.dim}Give your agent a name for the registry.${c.reset}\n`);
-    const agentName = await prompt(rl, `${c.green}❯${c.reset} Agent name: `);
+    console.log(`  ${c.dim}Step 1/4: Agent Name${c.reset}\n`);
+    const agentName = await prompt(rl, `  ${c.blue}❯${c.reset} Agent name: `);
     config.agentName = agentName || 'MyAgent';
-    console.log(`${c.green}✓${c.reset} Agent: ${c.bright}${config.agentName}${c.reset}\n`);
+    console.log(`  ${c.green}✓${c.reset} ${config.agentName}\n`);
     // Step 2: Network Selection
-    console.log(`${c.yellow}Step 2/4:${c.reset} ${c.bright}Network${c.reset}`);
-    console.log(`${c.dim}Choose your network. Use testnet for development.${c.reset}\n`);
-    console.log(`  ${c.cyan}1)${c.reset} Base Mainnet ${c.dim}(production, real USDC)${c.reset}`);
-    console.log(`  ${c.cyan}2)${c.reset} Base Sepolia ${c.dim}(testnet, free test USDC)${c.reset}\n`);
-    const networkChoice = await prompt(rl, `${c.green}❯${c.reset} Select network [1/2]: `);
+    console.log(`  ${c.dim}Step 2/4: Network${c.reset}\n`);
+    console.log(`    1) Base Mainnet ${c.dim}(production)${c.reset}`);
+    console.log(`    2) Base Sepolia ${c.dim}(testnet)${c.reset}\n`);
+    const networkChoice = await prompt(rl, `  ${c.blue}❯${c.reset} Select [1/2]: `);
     if (networkChoice === '2') {
         config.network = 'base-sepolia';
         config.rpcUrl = 'https://sepolia.base.org';
-        console.log(`${c.green}✓${c.reset} Network: ${c.yellow}Base Sepolia (Testnet)${c.reset}\n`);
+        console.log(`  ${c.green}✓${c.reset} Base Sepolia (Testnet)\n`);
     }
     else {
         config.network = 'base';
         config.rpcUrl = 'https://mainnet.base.org';
-        console.log(`${c.green}✓${c.reset} Network: ${c.bright}Base Mainnet${c.reset}\n`);
+        console.log(`  ${c.green}✓${c.reset} Base Mainnet\n`);
     }
     // Step 3: Wallet Setup
-    console.log(`${c.yellow}Step 3/4:${c.reset} ${c.bright}Wallet Setup${c.reset}`);
-    console.log(`${c.dim}You need a wallet to send and receive USDC.${c.reset}\n`);
-    console.log(`  ${c.cyan}1)${c.reset} Generate new wallet ${c.dim}(recommended for new users)${c.reset}`);
-    console.log(`  ${c.cyan}2)${c.reset} Import existing private key ${c.dim}(for existing wallets)${c.reset}`);
-    console.log(`  ${c.cyan}3)${c.reset} Skip for now ${c.dim}(read-only mode)${c.reset}\n`);
-    const walletChoice = await prompt(rl, `${c.green}❯${c.reset} Select option [1/2/3]: `);
+    console.log(`  ${c.dim}Step 3/4: Wallet${c.reset}\n`);
+    console.log(`    1) Generate new wallet`);
+    console.log(`    2) Import private key`);
+    console.log(`    3) Skip ${c.dim}(read-only)${c.reset}\n`);
+    const walletChoice = await prompt(rl, `  ${c.blue}❯${c.reset} Select [1/2/3]: `);
     if (walletChoice === '1') {
         // Generate new wallet
         const wallet = ethers_1.ethers.Wallet.createRandom();
         config.privateKey = wallet.privateKey;
-        console.log(`\n${c.green}✓${c.reset} New wallet generated!\n`);
-        console.log(`${c.bright}${c.cyan}┌─────────────────────────────────────────────────────────────┐${c.reset}`);
-        console.log(`${c.bright}${c.cyan}│${c.reset} ${c.bright}⚠️  SAVE THIS INFORMATION SECURELY!${c.reset}                        ${c.cyan}│${c.reset}`);
-        console.log(`${c.bright}${c.cyan}├─────────────────────────────────────────────────────────────┤${c.reset}`);
-        console.log(`${c.cyan}│${c.reset} Address:     ${c.green}${wallet.address}${c.reset}  ${c.cyan}│${c.reset}`);
-        console.log(`${c.cyan}│${c.reset} Private Key: ${c.yellow}${wallet.privateKey.slice(0, 20)}...${c.reset}            ${c.cyan}│${c.reset}`);
-        console.log(`${c.bright}${c.cyan}└─────────────────────────────────────────────────────────────┘${c.reset}`);
-        console.log(`\n${c.red}${c.bright}IMPORTANT:${c.reset} ${c.dim}Write down your private key and store it safely.${c.reset}`);
-        console.log(`${c.dim}If you lose it, you lose access to your funds forever.${c.reset}\n`);
-        await prompt(rl, `${c.yellow}Press Enter when you've saved your key...${c.reset}`);
+        console.log(`\n  ${c.green}✓${c.reset} New wallet generated\n`);
+        console.log(`  ${c.red}⚠️  SAVE THIS INFORMATION${c.reset}`);
+        console.log(`  ${c.dim}──────────────────────────────────────────────────${c.reset}`);
+        console.log(`  Address:     ${c.green}${wallet.address}${c.reset}`);
+        console.log(`  Private Key: ${c.yellow}${wallet.privateKey.slice(0, 20)}...${c.reset}`);
+        console.log(`  ${c.dim}──────────────────────────────────────────────────${c.reset}\n`);
+        console.log(`  ${c.dim}If you lose your key, you lose your funds forever.${c.reset}\n`);
+        await prompt(rl, `  ${c.dim}Press Enter when saved...${c.reset}`);
         console.log();
     }
     else if (walletChoice === '2') {
         // Import existing
-        console.log(`\n${c.dim}Enter your private key (input is hidden):${c.reset}\n`);
+        console.log(`\n  ${c.dim}Enter private key (hidden):${c.reset}\n`);
         let validKey = false;
         while (!validKey) {
-            const privateKey = await promptSecret(rl, `${c.green}❯${c.reset} Private key: `);
+            const privateKey = await promptSecret(rl, `  ${c.blue}❯${c.reset} Private key: `);
             if (isValidPrivateKey(privateKey)) {
                 config.privateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
                 const address = getAddress(config.privateKey);
-                console.log(`${c.green}✓${c.reset} Wallet imported: ${c.bright}${address}${c.reset}\n`);
+                const shortAddr = address.slice(0, 6) + '...' + address.slice(-4);
+                console.log(`  ${c.green}✓${c.reset} Imported ${shortAddr}\n`);
                 validKey = true;
             }
             else {
-                console.log(`${c.red}✗${c.reset} Invalid private key. Please try again.\n`);
+                console.log(`  ${c.red}✗${c.reset} Invalid key\n`);
             }
         }
     }
     else {
-        console.log(`${c.yellow}⚠${c.reset} Skipping wallet setup. You'll only be able to read data.\n`);
+        console.log(`  ${c.dim}Skipped. Read-only mode.${c.reset}\n`);
     }
     // Step 4: Verify & Complete
-    console.log(`${c.yellow}Step 4/4:${c.reset} ${c.bright}Verification${c.reset}\n`);
+    console.log(`  ${c.dim}Step 4/4: Verification${c.reset}\n`);
     // Test RPC connection
-    process.stdout.write(`${c.dim}Testing connection to ${config.network}...${c.reset} `);
+    process.stdout.write(`  ${c.dim}Testing ${config.network}...${c.reset} `);
     try {
         const provider = new ethers_1.ethers.JsonRpcProvider(config.rpcUrl);
         const blockNumber = await provider.getBlockNumber();
-        console.log(`${c.green}✓${c.reset} Connected (block #${blockNumber})`);
+        console.log(`${c.green}✓${c.reset} Block #${blockNumber}`);
     }
     catch (e) {
-        console.log(`${c.red}✗${c.reset} Failed to connect`);
+        console.log(`${c.red}✗${c.reset} Failed`);
     }
     // Check balance if wallet configured
     if (config.privateKey) {
-        process.stdout.write(`${c.dim}Checking USDC balance...${c.reset} `);
+        process.stdout.write(`  ${c.dim}Checking balance...${c.reset} `);
         try {
             const provider = new ethers_1.ethers.JsonRpcProvider(config.rpcUrl);
             const usdcAddress = config.network === 'base'
@@ -299,10 +288,10 @@ async function runSetupWizard() {
             const address = getAddress(config.privateKey);
             const balance = await usdc.balanceOf(address);
             const formatted = ethers_1.ethers.formatUnits(balance, 6);
-            console.log(`${c.green}✓${c.reset} ${formatted} USDC`);
+            console.log(`${c.green}✓${c.reset} $${formatted} USDC`);
         }
         catch (e) {
-            console.log(`${c.yellow}⚠${c.reset} Could not fetch balance`);
+            console.log(`${c.dim}─${c.reset}`);
         }
     }
     // Save config
@@ -1536,6 +1525,297 @@ async function handleLimitsHistory(args) {
     }
     console.log();
 }
+// ═══════════════════════════════════════════════════════════
+// PAYMENT & AGENT COMMANDS
+// ═══════════════════════════════════════════════════════════
+// Handle send command: paylobster send <address> <amount>
+async function handleSend(args) {
+    const config = loadConfig();
+    if (!config.privateKey) {
+        console.log(`${c.red}✗${c.reset} No wallet configured. Run ${c.cyan}paylobster setup${c.reset} first.`);
+        return;
+    }
+    if (args.length < 2) {
+        console.log(`\n${c.bright}Usage:${c.reset} paylobster send <address> <amount>\n`);
+        console.log(`${c.dim}Examples:${c.reset}`);
+        console.log(`  ${c.cyan}paylobster send 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb 25.50${c.reset}`);
+        console.log(`  ${c.cyan}paylobster send agent:DataBot 100${c.reset}`);
+        console.log(`  ${c.cyan}paylobster send @username 50${c.reset}\n`);
+        return;
+    }
+    const [address, amount] = args;
+    const amountNum = parseFloat(amount);
+    if (isNaN(amountNum) || amountNum <= 0) {
+        console.log(`${c.red}✗${c.reset} Invalid amount: ${amount}\n`);
+        return;
+    }
+    // Confirmation prompt (this is real money!)
+    const rl = createRL();
+    console.log(`\n${c.yellow}⚠️  You are about to send REAL money!${c.reset}\n`);
+    console.log(`  ${c.dim}To:${c.reset}     ${address}`);
+    console.log(`  ${c.dim}Amount:${c.reset} ${c.green}$${amountNum.toFixed(2)} USDC${c.reset}`);
+    console.log(`  ${c.dim}Network:${c.reset} ${config.network}\n`);
+    const confirm = await prompt(rl, `${c.yellow}Type 'yes' to confirm:${c.reset} `);
+    rl.close();
+    if (confirm.toLowerCase() !== 'yes') {
+        console.log(`\n${c.dim}Transfer cancelled.${c.reset}\n`);
+        return;
+    }
+    try {
+        const agent = new agent_1.LobsterAgent({
+            privateKey: config.privateKey,
+            network: config.network,
+            rpcUrl: config.rpcUrl
+        });
+        await agent.initialize();
+        console.log(`\n${c.dim}🦞 Sending ${amount} USDC...${c.reset}`);
+        const transfer = await agent.transfer({ to: address, amount });
+        console.log(`\n${c.green}✓ Transfer Complete!${c.reset}\n`);
+        console.log(`  ${c.dim}TX:${c.reset} ${c.cyan}${transfer.hash}${c.reset}`);
+        console.log(`  ${c.dim}To:${c.reset} ${transfer.toName || transfer.to}`);
+        console.log(`  ${c.dim}Amount:${c.reset} ${c.green}$${transfer.amount} USDC${c.reset}`);
+        console.log(`\n  ${c.dim}View: https://basescan.org/tx/${transfer.hash}${c.reset}\n`);
+        // Record in global stats
+        stats_1.stats.recordTransfer(transfer.from, transfer.to, transfer.amount, transfer.hash || transfer.id);
+    }
+    catch (e) {
+        console.log(`\n${c.red}✗${c.reset} Transfer failed: ${e.message}\n`);
+    }
+}
+// Handle escrow command: paylobster escrow <subcommand>
+async function handleEscrow(args) {
+    const config = loadConfig();
+    const subcommand = args[0]?.toLowerCase();
+    if (!subcommand) {
+        console.log(`\n${c.bright}Usage:${c.reset} paylobster escrow <command>\n`);
+        console.log(`${c.dim}Commands:${c.reset}`);
+        console.log(`  ${c.cyan}create <address> <amount> <description>${c.reset}  Create new escrow`);
+        console.log(`  ${c.cyan}list${c.reset}                                    List your escrows`);
+        console.log(`  ${c.cyan}release <escrowId>${c.reset}                      Release escrow funds`);
+        console.log(`  ${c.cyan}refund <escrowId>${c.reset}                       Refund escrow\n`);
+        console.log(`${c.dim}Examples:${c.reset}`);
+        console.log(`  ${c.cyan}paylobster escrow create 0x... 500 "Website development"${c.reset}`);
+        console.log(`  ${c.cyan}paylobster escrow release 42${c.reset}\n`);
+        return;
+    }
+    if (!config.privateKey) {
+        console.log(`${c.red}✗${c.reset} No wallet configured. Run ${c.cyan}paylobster setup${c.reset} first.`);
+        return;
+    }
+    const agent = new agent_1.LobsterAgent({
+        privateKey: config.privateKey,
+        network: config.network,
+        rpcUrl: config.rpcUrl
+    });
+    await agent.initialize();
+    try {
+        switch (subcommand) {
+            case 'create': {
+                if (args.length < 3) {
+                    console.log(`\n${c.bright}Usage:${c.reset} paylobster escrow create <address> <amount> [description]\n`);
+                    return;
+                }
+                const [, recipient, amount, ...descParts] = args;
+                const description = descParts.join(' ') || 'Escrow payment';
+                const amountNum = parseFloat(amount);
+                if (isNaN(amountNum) || amountNum <= 0) {
+                    console.log(`${c.red}✗${c.reset} Invalid amount: ${amount}\n`);
+                    return;
+                }
+                console.log(`\n${c.dim}Creating escrow...${c.reset}\n`);
+                console.log(`  ${c.dim}To:${c.reset}          ${recipient}`);
+                console.log(`  ${c.dim}Amount:${c.reset}      ${c.green}$${amountNum.toFixed(2)} USDC${c.reset}`);
+                console.log(`  ${c.dim}Description:${c.reset} ${description}\n`);
+                const escrow = await agent.createEscrow({
+                    recipient,
+                    amount: amount,
+                    conditions: {
+                        type: 'approval',
+                        description
+                    }
+                });
+                console.log(`\n${c.green}✓ Escrow Created!${c.reset}\n`);
+                console.log(`  ${c.dim}ID:${c.reset}     ${c.bright}${escrow.id}${c.reset}`);
+                console.log(`  ${c.dim}Amount:${c.reset} ${c.green}$${escrow.amount} USDC${c.reset}`);
+                console.log(`  ${c.dim}Status:${c.reset} ${escrow.status}\n`);
+                console.log(`${c.dim}Release with: ${c.cyan}paylobster escrow release ${escrow.id}${c.reset}\n`);
+                break;
+            }
+            case 'list': {
+                console.log(`\n${c.yellow}⚠${c.reset}  Escrow listing requires indexing.`);
+                console.log(`${c.dim}View your escrows at: https://basescan.org/address/${getAddress(config.privateKey)}${c.reset}\n`);
+                break;
+            }
+            case 'release': {
+                if (args.length < 2) {
+                    console.log(`\n${c.bright}Usage:${c.reset} paylobster escrow release <escrowId>\n`);
+                    return;
+                }
+                const escrowId = args[1];
+                console.log(`\n${c.dim}Releasing escrow ${escrowId}...${c.reset}`);
+                await agent.releaseEscrow(escrowId);
+                console.log(`\n${c.green}✓ Escrow Released!${c.reset}`);
+                console.log(`${c.dim}Funds have been transferred to the seller.${c.reset}\n`);
+                break;
+            }
+            case 'refund': {
+                if (args.length < 2) {
+                    console.log(`\n${c.bright}Usage:${c.reset} paylobster escrow refund <escrowId>\n`);
+                    return;
+                }
+                const escrowId = args[1];
+                console.log(`\n${c.dim}Refunding escrow ${escrowId}...${c.reset}`);
+                await agent.refundEscrow(escrowId);
+                console.log(`\n${c.green}✓ Escrow Refunded!${c.reset}`);
+                console.log(`${c.dim}Funds have been returned to you.${c.reset}\n`);
+                break;
+            }
+            default:
+                console.log(`${c.red}✗${c.reset} Unknown escrow command: ${subcommand}\n`);
+                console.log(`Run ${c.cyan}paylobster escrow${c.reset} for help.\n`);
+        }
+    }
+    catch (e) {
+        console.log(`\n${c.red}✗${c.reset} Escrow operation failed: ${e.message}\n`);
+    }
+}
+// Handle register command: paylobster register <name> [capabilities]
+async function handleRegister(args) {
+    const config = loadConfig();
+    if (!config.privateKey) {
+        console.log(`${c.red}✗${c.reset} No wallet configured. Run ${c.cyan}paylobster setup${c.reset} first.`);
+        return;
+    }
+    if (args.length < 1) {
+        console.log(`\n${c.bright}Usage:${c.reset} paylobster register <name> [capabilities...]\n`);
+        console.log(`${c.dim}Examples:${c.reset}`);
+        console.log(`  ${c.cyan}paylobster register DataAnalyzer data-processing analytics${c.reset}`);
+        console.log(`  ${c.cyan}paylobster register WebDevBot frontend backend api${c.reset}\n`);
+        return;
+    }
+    const [name, ...capabilities] = args;
+    const caps = capabilities.length > 0 ? capabilities : ['general'];
+    console.log(`\n${c.dim}🦞 Registering agent on-chain...${c.reset}\n`);
+    console.log(`  ${c.dim}Name:${c.reset}         ${c.bright}${name}${c.reset}`);
+    console.log(`  ${c.dim}Capabilities:${c.reset} ${caps.join(', ')}`);
+    console.log(`  ${c.dim}Network:${c.reset}      ${config.network}\n`);
+    try {
+        const agent = new agent_1.LobsterAgent({
+            privateKey: config.privateKey,
+            network: config.network,
+            rpcUrl: config.rpcUrl
+        });
+        await agent.initialize();
+        await agent.registerAgent({ name, capabilities: caps });
+        console.log(`\n${c.green}✓ Agent Registered!${c.reset}\n`);
+        console.log(`  ${c.dim}Your agent is now discoverable on-chain.${c.reset}`);
+        console.log(`  ${c.dim}Others can find you with: ${c.cyan}paylobster discover${c.reset}\n`);
+    }
+    catch (e) {
+        console.log(`\n${c.red}✗${c.reset} Registration failed: ${e.message}\n`);
+    }
+}
+// Handle discover command: paylobster discover [search]
+async function handleDiscover(args) {
+    const config = loadConfig();
+    const searchTerm = args[0]?.toLowerCase();
+    console.log(`\n${c.dim}🦞 Discovering agents on-chain...${c.reset}\n`);
+    try {
+        const agent = new agent_1.LobsterAgent({
+            network: config.network || 'base',
+            rpcUrl: config.rpcUrl
+        });
+        await agent.initialize();
+        const agents = await agent.discoverAgents({ limit: 20 });
+        if (agents.length === 0) {
+            console.log(`${c.dim}No agents found.${c.reset}`);
+            console.log(`${c.dim}Be the first: ${c.cyan}paylobster register <name>${c.reset}\n`);
+            return;
+        }
+        // Filter by search term if provided
+        const filtered = searchTerm
+            ? agents.filter(a => a.name.toLowerCase().includes(searchTerm) ||
+                a.capabilities.some(c => c.toLowerCase().includes(searchTerm)))
+            : agents;
+        if (filtered.length === 0) {
+            console.log(`${c.dim}No agents found matching "${searchTerm}".${c.reset}\n`);
+            return;
+        }
+        console.log(`${c.cyan}┌─────────────────────────────────────────────────────────┐${c.reset}`);
+        console.log(`${c.cyan}│${c.reset}  ${c.bright}🤖 Discovered Agents${c.reset}                                 ${c.cyan}│${c.reset}`);
+        console.log(`${c.cyan}└─────────────────────────────────────────────────────────┘${c.reset}\n`);
+        console.log(`${c.dim}  Name                      Trust    Address${c.reset}`);
+        console.log(`${c.dim}  ────────────────────────  ───────  ──────────────${c.reset}`);
+        for (const ag of filtered.slice(0, 10)) {
+            const name = ag.name.padEnd(24);
+            const trust = ag.trustScore
+                ? `${ag.trustScore.score}/100`.padEnd(7)
+                : 'N/A'.padEnd(7);
+            const addr = ag.address.slice(0, 6) + '...' + ag.address.slice(-4);
+            const trustColor = (ag.trustScore?.score || 0) >= 80 ? c.green :
+                (ag.trustScore?.score || 0) >= 60 ? c.cyan : c.dim;
+            console.log(`  ${name}  ${trustColor}${trust}${c.reset}  ${c.dim}${addr}${c.reset}`);
+        }
+        if (filtered.length > 10) {
+            console.log(`\n${c.dim}  ...and ${filtered.length - 10} more${c.reset}`);
+        }
+        console.log();
+    }
+    catch (e) {
+        console.log(`${c.red}✗${c.reset} Discovery failed: ${e.message}\n`);
+    }
+}
+// Handle trust command: paylobster trust <address>
+async function handleTrust(args) {
+    const config = loadConfig();
+    if (args.length < 1) {
+        console.log(`\n${c.bright}Usage:${c.reset} paylobster trust <address>\n`);
+        console.log(`${c.dim}Examples:${c.reset}`);
+        console.log(`  ${c.cyan}paylobster trust 0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb${c.reset}`);
+        console.log(`  ${c.cyan}paylobster trust agent:DataBot${c.reset}\n`);
+        return;
+    }
+    const address = args[0];
+    console.log(`\n${c.dim}🦞 Checking trust score...${c.reset}\n`);
+    try {
+        const agent = new agent_1.LobsterAgent({
+            network: config.network || 'base',
+            rpcUrl: config.rpcUrl
+        });
+        await agent.initialize();
+        const trustScore = await agent.getTrustScore(address);
+        const stars = trustScore.score >= 90 ? 5 :
+            trustScore.score >= 75 ? 4 :
+                trustScore.score >= 60 ? 3 :
+                    trustScore.score >= 40 ? 2 : 1;
+        const starStr = '⭐'.repeat(stars);
+        const levelEmoji = trustScore.level === 'verified' ? '✅' :
+            trustScore.level === 'trusted' ? '🔵' :
+                trustScore.level === 'established' ? '🟢' : '🆕';
+        console.log(`${c.cyan}┌─────────────────────────────────────────────────┐${c.reset}`);
+        console.log(`${c.cyan}│${c.reset}  ${c.bright}🏆 Trust Score${c.reset}                             ${c.cyan}│${c.reset}`);
+        console.log(`${c.cyan}├─────────────────────────────────────────────────┤${c.reset}`);
+        console.log(`${c.cyan}│${c.reset}  Address: ${address.slice(0, 20)}...${c.cyan}│${c.reset}`);
+        console.log(`${c.cyan}├─────────────────────────────────────────────────┤${c.reset}`);
+        console.log(`${c.cyan}│${c.reset}  Score:       ${c.green}${trustScore.score}/100${c.reset} ${starStr}${''.padStart(20 - starStr.length)}${c.cyan}│${c.reset}`);
+        console.log(`${c.cyan}│${c.reset}  Level:       ${levelEmoji} ${c.bright}${trustScore.level.toUpperCase()}${c.reset}${''.padStart(31 - trustScore.level.length)}${c.cyan}│${c.reset}`);
+        console.log(`${c.cyan}│${c.reset}  Transactions: ${trustScore.totalTransactions}${''.padStart(31 - String(trustScore.totalTransactions).length)}${c.cyan}│${c.reset}`);
+        console.log(`${c.cyan}│${c.reset}  Success Rate: ${trustScore.successRate}%${''.padStart(30 - String(trustScore.successRate).length)}${c.cyan}│${c.reset}`);
+        console.log(`${c.cyan}└─────────────────────────────────────────────────┘${c.reset}\n`);
+        if (trustScore.level === 'verified') {
+            console.log(`${c.green}✓${c.reset} This agent is highly trusted! Safe to transact.\n`);
+        }
+        else if (trustScore.level === 'trusted') {
+            console.log(`${c.cyan}✓${c.reset} This agent has a good reputation.\n`);
+        }
+        else if (trustScore.level === 'new') {
+            console.log(`${c.yellow}⚠${c.reset}  This agent is new. Proceed with caution.\n`);
+        }
+    }
+    catch (e) {
+        console.log(`${c.red}✗${c.reset} Trust check failed: ${e.message}\n`);
+    }
+}
 // Main CLI entry point
 async function main() {
     const args = process.argv.slice(2);
@@ -1577,27 +1857,19 @@ async function main() {
             await handleFund(args.slice(1));
             break;
         case 'send':
-            console.log(`\n${c.yellow}⚠${c.reset}  Send command coming soon!`);
-            console.log(`${c.dim}For now, use the library directly:${c.reset}\n`);
-            console.log(`  ${c.cyan}import { LobsterAgent } from 'pay-lobster';${c.reset}`);
-            console.log(`  ${c.cyan}const agent = new LobsterAgent({ privateKey });${c.reset}`);
-            console.log(`  ${c.cyan}await agent.transfer(recipientAddress, 25.00);${c.reset}\n`);
+            await handleSend(args.slice(1));
             break;
         case 'escrow':
-            console.log(`\n${c.yellow}⚠${c.reset}  Escrow commands coming soon!`);
-            console.log(`${c.dim}For now, use the library directly. See docs.${c.reset}\n`);
+            await handleEscrow(args.slice(1));
             break;
         case 'trust':
-            console.log(`\n${c.yellow}⚠${c.reset}  Trust command coming soon!`);
-            console.log(`${c.dim}Registry: 0x10BCa62Ce136A70F914c56D97e491a85d1e050E7${c.reset}\n`);
+            await handleTrust(args.slice(1));
             break;
         case 'discover':
-            console.log(`\n${c.yellow}⚠${c.reset}  Discover command coming soon!`);
-            console.log(`${c.dim}Registry: 0x10BCa62Ce136A70F914c56D97e491a85d1e050E7${c.reset}\n`);
+            await handleDiscover(args.slice(1));
             break;
         case 'register':
-            console.log(`\n${c.yellow}⚠${c.reset}  Register command coming soon!`);
-            console.log(`${c.dim}For now, register directly via the contract.${c.reset}\n`);
+            await handleRegister(args.slice(1));
             break;
         case 'swap':
             await handleSwap(args.slice(1));
